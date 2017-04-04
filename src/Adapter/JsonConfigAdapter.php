@@ -3,10 +3,7 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
-
-class YamlConfigAdapter implements ConfigAdapterInterface
+class JsonConfigAdapter implements ConfigAdapterInterface
 {
     /**
      * @param \SplFileInfo $file
@@ -14,13 +11,10 @@ class YamlConfigAdapter implements ConfigAdapterInterface
      */
     public function load(\SplFileInfo $file): array
     {
-        if (!class_exists('Symfony\\Component\\Yaml\\Yaml')) {
-            throw new \RuntimeException('Symfony yaml component is not installed');
-        }
         if (!$file->isReadable()) {
             throw new \RuntimeException('Config file is not readable');
         }
-        if ($file->getExtension() !== 'yml' || $file->getExtension() !== 'yaml') {
+        if ($file->getExtension() !== 'json') {
             throw new \RuntimeException('Invalid config file type provided');
         }
 
@@ -28,11 +22,11 @@ class YamlConfigAdapter implements ConfigAdapterInterface
         if ($contents === false) {
             throw new \RuntimeException('Unable to read config file');
         }
-
-        try {
-            $config = Yaml::parse($contents);
-        } catch (ParseException $e) {
-            throw new \RuntimeException('Unable to parse config file');
+        $config = json_decode($contents, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException(
+                sprintf('Unable to parse JSON file: %s', json_last_error_msg())
+            );
         }
 
         return $config;

@@ -3,7 +3,7 @@
 namespace Misantron\Silex\Provider;
 
 
-use Misantron\Silex\Provider\Adapter\AdapterInterface;
+use Misantron\Silex\Provider\Adapter\ConfigAdapterInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -24,12 +24,22 @@ class ConfigServiceProvider implements ServiceProviderInterface
     private $replacements = [];
 
     /**
-     * @param AdapterInterface $adapter
+     * @var string
+     */
+    private $key;
+
+    /**
+     * @param ConfigAdapterInterface $adapter
      * @param array $paths
      * @param array $replacements
+     * @param string $key
      */
-    public function __construct(AdapterInterface $adapter, array $paths, array $replacements = [])
-    {
+    public function __construct(
+        ConfigAdapterInterface $adapter,
+        array $paths,
+        array $replacements = [],
+        string $key = 'config'
+    ) {
         $files = array_filter($paths, function ($file) {
             return file_exists($file);
         });
@@ -43,9 +53,10 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }, []);
 
         if (empty($config)) {
-            throw new \RuntimeException('');
+            throw new \RuntimeException('Config is empty');
         }
 
+        $this->key = $key;
         $this->config = $config;
 
         foreach ($replacements as $key => $value) {
@@ -58,7 +69,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['config'] = new Container();
+        $app[$this->key] = new Container();
 
         foreach ($this->config as $name => $value) {
             if (substr($name, 0, 1) === '%') {
@@ -70,22 +81,37 @@ class ConfigServiceProvider implements ServiceProviderInterface
                 $app[$name] = $value;
                 continue;
             }
-            $app['config'][$name] = $this->doReplacements($value);
+            if (is_array($value)) {
+                $app[$this->key][$name] = $this->doReplacementsInArray($value);
+            } elseif (is_string($value)) {
+                $app[$this->key][$name] = $this->doReplacementsInString($value);
+            } else {
+                $app[$this->key][$name] = $value;
+            }
         }
     }
 
-    private function doReplacements($value)
+    /**
+     * @param string $value
+     * @return string
+     */
+    private function doReplacementsInString(string $value)
     {
-        if (empty($this->replacements)) {
-            return $value;
-        }
-        if (is_array($value)) {
-            foreach ($value as $k => $v) {
-                $value[$k] = $this->doReplacements($v);
+        return strtr($value, $this->replacements);
+    }
+
+    /**
+     * @param array $value
+     * @return array
+     */
+    private function doReplacementsInArray(array $value)
+    {
+        foreach ($value as $k => $v) {
+            if (is_array($value)) {
+                $value[$k] = $this->doReplacementsInArray($v);
+            } elseif (is_string($value)) {
+                $value[$k] = $this->doReplacementsInString($v);
             }
-            return $value;
-        } else if (is_string($value)) {
-            return strtr($value, $this->replacements);
         }
         return $value;
     }

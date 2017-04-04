@@ -3,7 +3,7 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 
-interface AdapterInterface
+interface ConfigAdapterInterface
 {
     /**
      * @param \SplFileInfo $file
