@@ -4,7 +4,7 @@ namespace Misantron\Silex\Provider\Adapter;
 
 
 use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 
 class YamlConfigAdapter implements ConfigAdapterInterface
 {
@@ -30,9 +30,9 @@ class YamlConfigAdapter implements ConfigAdapterInterface
         }
 
         try {
-            $config = Yaml::parse($contents);
+            $config = (new Parser())->parse($contents);
         } catch (ParseException $e) {
-            throw new \RuntimeException('Unable to parse config file');
+            throw new \RuntimeException('Unable to parse config file: ' . $e->getMessage());
         }
 
         return $config;
