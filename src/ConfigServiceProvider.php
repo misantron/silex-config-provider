@@ -72,11 +72,6 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $app[$this->key] = new Container();
 
         foreach ($this->config as $name => $value) {
-            if (substr($name, 0, 1) === '%') {
-                $this->replacements[$name] = (string)$value;
-            }
-        }
-        foreach ($this->config as $name => $value) {
             if ($name === 'debug') {
                 $app[$name] = $value;
                 continue;
