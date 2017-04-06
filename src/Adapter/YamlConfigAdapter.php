@@ -20,7 +20,7 @@ class YamlConfigAdapter implements ConfigAdapterInterface
         if (!$file->isReadable()) {
             throw new \RuntimeException('Config file is not readable');
         }
-        if ($file->getExtension() !== 'yml' || $file->getExtension() !== 'yaml') {
+        if ($file->getExtension() !== 'yml' && $file->getExtension() !== 'yaml') {
             throw new \RuntimeException('Invalid config file type provided');
         }
 

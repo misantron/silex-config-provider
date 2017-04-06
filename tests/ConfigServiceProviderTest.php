@@ -6,15 +6,16 @@ namespace Misantron\Silex\Provider\Tests;
 use Misantron\Silex\Provider\Adapter\ConfigAdapterInterface;
 use Misantron\Silex\Provider\ConfigServiceProvider;
 use PHPUnit\Framework\TestCase;
+use Silex\Application;
 
 class ConfigServiceProviderTest extends TestCase
 {
     public function testDefaultConstructor()
     {
-        /** @var ConfigAdapterInterface $adapter */
-        $adapter = $this->createMock(ConfigAdapterInterface::class)
-            ->method('load')
-            ->willReturn(['foo' => 'bar']);
+        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapterInterface::class);
+
+        $adapter->method('load')->willReturn(['foo' => 'bar']);
 
         $provider = new ConfigServiceProvider(
             $adapter,
@@ -28,10 +29,10 @@ class ConfigServiceProviderTest extends TestCase
 
     public function testConstructor()
     {
-        /** @var ConfigAdapterInterface $adapter */
-        $adapter = $this->createMock(ConfigAdapterInterface::class)
-            ->method('load')
-            ->willReturn(['foo' => 'bar']);
+        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapterInterface::class);
+
+        $adapter->method('load')->willReturn(['foo' => 'bar']);
 
         $provider = new ConfigServiceProvider(
             $adapter,
@@ -43,5 +44,34 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertAttributeEquals(['foo' => 'bar'], 'config', $provider);
         $this->assertAttributeEquals(['%root%' => __DIR__], 'replacements', $provider);
         $this->assertAttributeEquals('conf', 'key', $provider);
+    }
+
+    public function testRegister()
+    {
+        $dbOptions = [
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'user' => 'root',
+            'password' => '',
+            'db_name' => 'db_test'
+        ];
+
+        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapterInterface::class);
+
+        $adapter->method('load')->willReturn([
+            'debug' => true,
+            'db.options' => $dbOptions
+        ]);
+
+        $app = new Application();
+        $app->register(new ConfigServiceProvider(
+            $adapter,
+            [__DIR__ . '/resources/base.php']
+        ));
+
+        $this->assertEquals(true, $app['debug']);
+        $this->assertArrayHasKey('config', $app);
+        $this->assertEquals($dbOptions, $app['config']['db.options']);
     }
 }

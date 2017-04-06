@@ -3,10 +3,10 @@
 namespace Misantron\Silex\Provider\Tests\Adapter;
 
 
-use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
+use Misantron\Silex\Provider\Adapter\YamlConfigAdapter;
 use PHPUnit\Framework\TestCase;
 
-class PhpConfigAdapterTest extends TestCase
+class YamlConfigAdapterTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException
@@ -14,9 +14,9 @@ class PhpConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigType()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.yml');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/base.json');
 
-        $adapter = new PhpConfigAdapter();
+        $adapter = new YamlConfigAdapter();
         $adapter->load($file);
     }
 
@@ -29,18 +29,18 @@ class PhpConfigAdapterTest extends TestCase
         /** @var \SplFileInfo|\PHPUnit_Framework_MockObject_MockObject $file */
         $file = $this->createMock(\SplFileInfo::class);
 
-        $file->method('getExtension')->willReturn('php');
+        $file->method('getExtension')->willReturn('yml');
         $file->method('isReadable')->willReturn(false);
 
-        $adapter = new PhpConfigAdapter();
+        $adapter = new YamlConfigAdapter();
         $adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.php');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/base.yml');
 
-        $adapter = new PhpConfigAdapter();
+        $adapter = new YamlConfigAdapter();
         $config = $adapter->load($file);
 
         $this->assertEquals(['foo' => 'bar'], $config);

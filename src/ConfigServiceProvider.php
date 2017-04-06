@@ -102,9 +102,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
     private function doReplacementsInArray(array $value)
     {
         foreach ($value as $k => $v) {
-            if (is_array($value)) {
+            if (is_array($v)) {
                 $value[$k] = $this->doReplacementsInArray($v);
-            } elseif (is_string($value)) {
+            } elseif (is_string($v)) {
                 $value[$k] = $this->doReplacementsInString($v);
             }
         }

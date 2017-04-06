@@ -3,10 +3,10 @@
 namespace Misantron\Silex\Provider\Tests\Adapter;
 
 
-use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
+use Misantron\Silex\Provider\Adapter\JsonConfigAdapter;
 use PHPUnit\Framework\TestCase;
 
-class PhpConfigAdapterTest extends TestCase
+class JsonConfigAdapterTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException
@@ -14,9 +14,9 @@ class PhpConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigType()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.yml');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/base.php');
 
-        $adapter = new PhpConfigAdapter();
+        $adapter = new JsonConfigAdapter();
         $adapter->load($file);
     }
 
@@ -29,18 +29,18 @@ class PhpConfigAdapterTest extends TestCase
         /** @var \SplFileInfo|\PHPUnit_Framework_MockObject_MockObject $file */
         $file = $this->createMock(\SplFileInfo::class);
 
-        $file->method('getExtension')->willReturn('php');
+        $file->method('getExtension')->willReturn('json');
         $file->method('isReadable')->willReturn(false);
 
-        $adapter = new PhpConfigAdapter();
+        $adapter = new JsonConfigAdapter();
         $adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.php');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/base.json');
 
-        $adapter = new PhpConfigAdapter();
+        $adapter = new JsonConfigAdapter();
         $config = $adapter->load($file);
 
         $this->assertEquals(['foo' => 'bar'], $config);
