@@ -36,6 +36,18 @@ class YamlConfigAdapterTest extends TestCase
         $adapter->load($file);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Unable to parse config file: Malformed inline YAML string: {bar} test at line 1 (near "foo: {bar} test").
+     */
+    public function testLoadInvalidConfigFile()
+    {
+        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.yml');
+
+        $adapter = new YamlConfigAdapter();
+        $adapter->load($file);
+    }
+
     public function testLoad()
     {
         $file = new \SplFileInfo(__DIR__ . '/../resources/base.yml');

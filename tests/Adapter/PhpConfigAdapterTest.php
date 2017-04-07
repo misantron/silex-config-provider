@@ -36,6 +36,18 @@ class PhpConfigAdapterTest extends TestCase
         $adapter->load($file);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Invalid config file
+     */
+    public function testLoadInvalidConfigFile()
+    {
+        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.php');
+
+        $adapter = new PhpConfigAdapter();
+        $adapter->load($file);
+    }
+
     public function testLoad()
     {
         $file = new \SplFileInfo(__DIR__ . '/../resources/base.php');

@@ -19,6 +19,9 @@ class PhpConfigAdapter implements ConfigAdapterInterface
         }
 
         $config = require $file->getRealPath();
+        if (!is_array($config)) {
+            throw new \RuntimeException('Invalid config file');
+        }
 
         return $config;
     }

@@ -18,11 +18,7 @@ class JsonConfigAdapter implements ConfigAdapterInterface
             throw new \RuntimeException('Invalid config file type provided');
         }
 
-        $contents = file_get_contents($file->getRealPath());
-        if ($contents === false) {
-            throw new \RuntimeException('Unable to read config file');
-        }
-        $config = json_decode($contents, true);
+        $config = json_decode(file_get_contents($file->getRealPath()), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException(
                 sprintf('Unable to parse JSON file: %s', json_last_error_msg())

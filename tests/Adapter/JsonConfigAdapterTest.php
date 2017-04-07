@@ -36,6 +36,18 @@ class JsonConfigAdapterTest extends TestCase
         $adapter->load($file);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Unable to parse JSON file: Syntax error
+     */
+    public function testLoadInvalidConfigFile()
+    {
+        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.json');
+
+        $adapter = new JsonConfigAdapter();
+        $adapter->load($file);
+    }
+
     public function testLoad()
     {
         $file = new \SplFileInfo(__DIR__ . '/../resources/base.json');

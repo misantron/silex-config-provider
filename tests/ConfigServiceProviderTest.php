@@ -46,6 +46,23 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertAttributeEquals('conf', 'key', $provider);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Config is empty
+     */
+    public function testConstructorWithEmptyConfig()
+    {
+        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapterInterface::class);
+
+        $adapter->method('load')->willReturn([]);
+
+        new ConfigServiceProvider(
+            $adapter,
+            [__DIR__ . '/resources/base.php']
+        );
+    }
+
     public function testRegister()
     {
         $dbOptions = [
@@ -56,12 +73,23 @@ class ConfigServiceProviderTest extends TestCase
             'db_name' => 'db_test'
         ];
 
+        $twig = [
+            'twig.path' => ['%ROOT_PATH%/app/templates/'],
+            'twig.options' => [
+                'debug' => true,
+                'auto_reload' => true,
+                'cache' => '%ROOT_PATH%/app/cache/twig'
+            ],
+        ];
+
         /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapterInterface::class);
 
         $adapter->method('load')->willReturn([
             'debug' => true,
-            'db.options' => $dbOptions
+            'base.path' => __DIR__,
+            'db.options' => $dbOptions,
+            'twig' => $twig
         ]);
 
         $app = new Application();
@@ -73,5 +101,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertEquals(true, $app['debug']);
         $this->assertArrayHasKey('config', $app);
         $this->assertEquals($dbOptions, $app['config']['db.options']);
+        $this->assertEquals(__DIR__, $app['config']['base.path']);
+        $this->assertEquals($twig, $app['config']['twig']);
     }
 }

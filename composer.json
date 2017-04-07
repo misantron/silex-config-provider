@@ -1,6 +1,6 @@
 {
     "name": "misantron/silex-config-provider",
-    "description": "Config service provider for Silex framework with support for php, json and yaml",
+    "description": "Config service provider for Silex framework with support for php, ini, json and yaml",
     "keywords": ["php", "silex", "config", "provider"],
     "homepage": "https://github.com/misantron/silex-config-provider",
     "type": "library",
