@@ -3,10 +3,10 @@
 namespace Misantron\Silex\Provider\Tests\Adapter;
 
 
-use Misantron\Silex\Provider\Adapter\YamlConfigAdapter;
+use Misantron\Silex\Provider\Adapter\IniConfigAdapter;
 use PHPUnit\Framework\TestCase;
 
-class YamlConfigAdapterTest extends TestCase
+class IniConfigAdapterTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException
@@ -14,9 +14,9 @@ class YamlConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigType()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.ini');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/base.json');
 
-        $adapter = new YamlConfigAdapter();
+        $adapter = new IniConfigAdapter();
         $adapter->load($file);
     }
 
@@ -29,18 +29,18 @@ class YamlConfigAdapterTest extends TestCase
         /** @var \SplFileInfo|\PHPUnit_Framework_MockObject_MockObject $file */
         $file = $this->createMock(\SplFileInfo::class);
 
-        $file->method('getExtension')->willReturn('yml');
+        $file->method('getExtension')->willReturn('ini');
         $file->method('isReadable')->willReturn(false);
 
-        $adapter = new YamlConfigAdapter();
+        $adapter = new IniConfigAdapter();
         $adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.yml');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/base.ini');
 
-        $adapter = new YamlConfigAdapter();
+        $adapter = new IniConfigAdapter();
         $config = $adapter->load($file);
 
         $this->assertEquals(['foo' => 'bar'], $config);
