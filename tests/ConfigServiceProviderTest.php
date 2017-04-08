@@ -4,6 +4,7 @@ namespace Misantron\Silex\Provider\Tests;
 
 
 use Misantron\Silex\Provider\Adapter\ConfigAdapterInterface;
+use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
 use Misantron\Silex\Provider\ConfigServiceProvider;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
@@ -74,11 +75,9 @@ class ConfigServiceProviderTest extends TestCase
         ];
 
         $twig = [
-            'twig.path' => ['%ROOT_PATH%/app/templates/'],
             'twig.options' => [
                 'debug' => true,
                 'auto_reload' => true,
-                'cache' => '%ROOT_PATH%/app/cache/twig'
             ],
         ];
 
@@ -92,7 +91,7 @@ class ConfigServiceProviderTest extends TestCase
             'twig' => $twig
         ]);
 
-        $app = new Application();
+        $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
             $adapter,
             [__DIR__ . '/resources/base.php']
@@ -103,5 +102,40 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertEquals($dbOptions, $app['config']['db.options']);
         $this->assertEquals(__DIR__, $app['config']['base.path']);
         $this->assertEquals($twig, $app['config']['twig']);
+    }
+
+    public function testRegisterWithConfigFilesMergeAndReplacements()
+    {
+        $root = realpath(__DIR__ . '/..');
+
+        $app = new Application(['debug' => false]);
+        $app->register(new ConfigServiceProvider(
+            new PhpConfigAdapter(),
+            [
+                __DIR__ . '/resources/common.php',
+                __DIR__ . '/resources/app.php',
+            ],
+            [
+                'ROOT_PATH' => $root,
+            ]
+        ));
+
+        $this->assertEquals(true, $app['debug']);
+        $this->assertArrayHasKey('config', $app);
+
+        $this->assertEquals('Europe/London', $app['config']['date.timezone']);
+
+        $this->assertEquals([
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'user' => 'app',
+            'password' => 'root',
+            'db_name' => 'db_app'
+        ], $app['config']['db.options']);
+
+        $this->assertEquals([
+            'monolog.logfile' => $root . '/logs/app.log',
+            'monolog.name' => 'app'
+        ], $app['config']['logger']);
     }
 }

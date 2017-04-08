@@ -47,7 +47,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
             $file = new \SplFileInfo($path);
             if ($file->isFile()) {
                 $config = $adapter->load($file);
-                $carry = array_merge_recursive($carry, $config);
+                $carry = array_replace_recursive($carry, $config);
             }
             return $carry;
         }, []);
