@@ -19,9 +19,11 @@ class IniConfigAdapter implements ConfigAdapterInterface
         }
 
         $config = parse_ini_file($file->getRealPath());
+        // @codeCoverageIgnoreStart
         if ($config === false) {
-            throw new \RuntimeException('Unable to parse INI file');
+            throw new \RuntimeException('Unable to parse config file');
         }
+        // @codeCoverageIgnoreEnd
 
         return $config;
     }

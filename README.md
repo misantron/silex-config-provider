@@ -5,11 +5,11 @@
 [![Code Climate](http://img.shields.io/codeclimate/github/misantron/silex-config-provider.svg?style=flat-square)](https://codeclimate.com/github/misantron/silex-config-provider)
 [![PHP 7 Support](https://img.shields.io/badge/PHP%207-supported-blue.svg?style=flat-square)](https://travis-ci.org/misantron/silex-basic-app)
 
-Config service provider for [Silex](http://silex.sensiolabs.org) framework with support for php, json and yaml
+Config service provider for [Silex](http://silex.sensiolabs.org) framework with support for php, json, ini, xml and yaml
 
 ## Features
 
-- Support different formats of config files: php, json and yaml (require symfony/yaml)
+- Support different formats of config files: php, json, ini, xml and yaml (require symfony/yaml)
 - Multiple config file processing
 - On load placeholder replacements
 - PHP7 support
