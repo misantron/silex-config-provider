@@ -90,7 +90,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
      * @param string $value
      * @return string
      */
-    private function doReplacementsInString(string $value)
+    private function doReplacementsInString(string $value): string
     {
         return strtr($value, $this->replacements);
     }
@@ -99,7 +99,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
      * @param array $value
      * @return array
      */
-    private function doReplacementsInArray(array $value)
+    private function doReplacementsInArray(array $value): array
     {
         foreach ($value as $k => $v) {
             if (is_array($v)) {

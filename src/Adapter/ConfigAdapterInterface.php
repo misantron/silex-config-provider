@@ -9,5 +9,5 @@ interface ConfigAdapterInterface
      * @param \SplFileInfo $file
      * @return array
      */
-    public function load(\SplFileInfo $file) : array;
+    public function load(\SplFileInfo $file): array;
 }

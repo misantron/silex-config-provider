@@ -9,7 +9,7 @@ class PhpConfigAdapter implements ConfigAdapterInterface
      * @param \SplFileInfo $file
      * @return array
      */
-    public function load(\SplFileInfo $file) : array
+    public function load(\SplFileInfo $file): array
     {
         if ($file->getExtension() !== 'php') {
             throw new \RuntimeException('Invalid config file type provided');
