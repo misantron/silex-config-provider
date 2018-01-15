@@ -1,16 +1,16 @@
 # Config service provider
 
 [![Build Status](http://img.shields.io/travis/misantron/silex-config-provider.svg?style=flat-square)](https://travis-ci.org/misantron/silex-config-provider)
-[![Code Coverage](http://img.shields.io/coveralls/misantron/silex-config-provider.svg?style=flat-square)](https://coveralls.io/r/misantron/silex-config-provider)
+[![Code Coverage](http://img.shields.io/coveralls/github/misantron/silex-config-provider.svg?style=flat-square)](https://coveralls.io/github//misantron/silex-config-provider)
 [![Code Climate](http://img.shields.io/codeclimate/github/misantron/silex-config-provider.svg?style=flat-square)](https://codeclimate.com/github/misantron/silex-config-provider)
 [![Packagist](https://img.shields.io/packagist/v/misantron/silex-config-provider.svg?style=flat-square)](https://packagist.org/packages/misantron/silex-config-provider)
 [![PHP 7 Support](https://img.shields.io/badge/PHP%207-supported-blue.svg?style=flat-square)](https://travis-ci.org/misantron/silex-basic-app)
 
-Config service provider for [Silex](http://silex.sensiolabs.org) framework with support for php, json, ini, xml and yaml
+Config service provider for [Silex](http://silex.sensiolabs.org) framework with support for php, json, ini, xml, toml and yaml
 
 ## Features
 
-- Support different formats of config files: php, json, ini, xml and yaml (require symfony/yaml)
+- Support different formats of config files: php, json, ini, xml, toml (require leonelquinteros/php-toml) and yaml (require symfony/yaml)
 - Multiple config file processing
 - On load placeholder replacements
 - PHP7 support
