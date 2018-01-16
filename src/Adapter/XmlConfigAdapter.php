@@ -3,6 +3,10 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 
+/**
+ * Class XmlConfigAdapter
+ * @package Misantron\Silex\Provider\Adapter
+ */
 class XmlConfigAdapter implements ConfigAdapterInterface
 {
     /**

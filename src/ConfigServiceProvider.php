@@ -43,7 +43,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $files = array_filter($paths, function ($file) {
             return file_exists($file);
         });
-        $config = array_reduce($files, function ($carry, $path) use ($adapter) {
+        $config = array_reduce($files, function (array $carry, string $path) use ($adapter) {
             $file = new \SplFileInfo($path);
             if ($file->isFile()) {
                 $config = $adapter->load($file);

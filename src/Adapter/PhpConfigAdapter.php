@@ -11,11 +11,11 @@ class PhpConfigAdapter implements ConfigAdapterInterface
      */
     public function load(\SplFileInfo $file): array
     {
-        if ($file->getExtension() !== 'php') {
-            throw new \RuntimeException('Invalid config file type provided');
-        }
         if (!$file->isReadable()) {
             throw new \RuntimeException('Config file is not readable');
+        }
+        if ($file->getExtension() !== 'php') {
+            throw new \RuntimeException('Invalid config file type provided');
         }
 
         $config = require $file->getRealPath();

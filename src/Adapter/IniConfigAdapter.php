@@ -3,6 +3,10 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 
+/**
+ * Class IniConfigAdapter
+ * @package Misantron\Silex\Provider\Adapter
+ */
 class IniConfigAdapter implements ConfigAdapterInterface
 {
     /**

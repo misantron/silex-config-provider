@@ -3,6 +3,10 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 
+/**
+ * Interface ConfigAdapterInterface
+ * @package Misantron\Silex\Provider\Adapter
+ */
 interface ConfigAdapterInterface
 {
     /**

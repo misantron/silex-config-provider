@@ -6,6 +6,10 @@ namespace Misantron\Silex\Provider\Adapter;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
+/**
+ * Class YamlConfigAdapter
+ * @package Misantron\Silex\Provider\Adapter
+ */
 class YamlConfigAdapter implements ConfigAdapterInterface
 {
     /**
