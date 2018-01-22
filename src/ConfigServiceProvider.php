@@ -69,7 +69,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app[$this->key] = new Container();
+        if (!isset($app[$this->key])) {
+            $app[$this->key] = new Container();
+        }
 
         foreach ($this->config as $name => $value) {
             if ($name === 'debug') {
