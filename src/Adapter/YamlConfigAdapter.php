@@ -3,6 +3,7 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 
+use Misantron\Silex\Provider\ConfigAdapter;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
@@ -10,25 +11,18 @@ use Symfony\Component\Yaml\Parser;
  * Class YamlConfigAdapter
  * @package Misantron\Silex\Provider\Adapter
  */
-class YamlConfigAdapter implements ConfigAdapterInterface
+class YamlConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
-     * @return array
+     * {@inheritdoc}
      */
-    public function load(\SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('Symfony\\Component\\Yaml\\Yaml')) {
             throw new \RuntimeException('Yaml parser component is not installed');
         }
         // @codeCoverageIgnoreEnd
-        if (!$file->isReadable()) {
-            throw new \RuntimeException('Config file is not readable');
-        }
-        if ($file->getExtension() !== 'yml' && $file->getExtension() !== 'yaml') {
-            throw new \RuntimeException('Invalid config file type provided');
-        }
 
         try {
             $config = (new Parser())->parse(file_get_contents($file->getRealPath()));
@@ -37,5 +31,13 @@ class YamlConfigAdapter implements ConfigAdapterInterface
         }
 
         return $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configFileExtensions(): array
+    {
+        return ['yml', 'yaml'];
     }
 }

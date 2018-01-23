@@ -2,26 +2,19 @@
 
 namespace Misantron\Silex\Provider\Adapter;
 
+use Misantron\Silex\Provider\ConfigAdapter;
 
 /**
  * Class XmlConfigAdapter
  * @package Misantron\Silex\Provider\Adapter
  */
-class XmlConfigAdapter implements ConfigAdapterInterface
+class XmlConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
-     * @return array
+     * {@inheritdoc}
      */
-    public function load(\SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
-        if (!$file->isReadable()) {
-            throw new \RuntimeException('Config file is not readable');
-        }
-        if ($file->getExtension() !== 'xml') {
-            throw new \RuntimeException('Invalid config file type provided');
-        }
-
         libxml_use_internal_errors(true);
 
         $xml = simplexml_load_file($file->getRealPath());
@@ -37,5 +30,13 @@ class XmlConfigAdapter implements ConfigAdapterInterface
         $config = json_decode(json_encode($xml), true);
 
         return $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configFileExtensions(): array
+    {
+        return ['xml'];
     }
 }

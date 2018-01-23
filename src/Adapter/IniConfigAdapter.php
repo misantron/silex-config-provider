@@ -2,28 +2,29 @@
 
 namespace Misantron\Silex\Provider\Adapter;
 
+use Misantron\Silex\Provider\ConfigAdapter;
 
 /**
  * Class IniConfigAdapter
  * @package Misantron\Silex\Provider\Adapter
  */
-class IniConfigAdapter implements ConfigAdapterInterface
+class IniConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
-     * @return array
+     * {@inheritdoc}
      */
-    public function load(\SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
-        if (!$file->isReadable()) {
-            throw new \RuntimeException('Config file is not readable');
-        }
-        if ($file->getExtension() !== 'ini') {
-            throw new \RuntimeException('Invalid config file type provided');
-        }
-
         $config = parse_ini_file($file->getRealPath());
 
         return $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configFileExtensions(): array
+    {
+        return ['ini'];
     }
 }

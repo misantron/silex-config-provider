@@ -2,27 +2,33 @@
 
 namespace Misantron\Silex\Provider\Adapter;
 
+use Misantron\Silex\Provider\ConfigAdapter;
 
-class PhpConfigAdapter implements ConfigAdapterInterface
+/**
+ * Class PhpConfigAdapter
+ * @package Misantron\Silex\Provider\Adapter
+ */
+class PhpConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
-     * @return array
+     * {@inheritdoc}
      */
-    public function load(\SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
-        if (!$file->isReadable()) {
-            throw new \RuntimeException('Config file is not readable');
-        }
-        if ($file->getExtension() !== 'php') {
-            throw new \RuntimeException('Invalid config file type provided');
-        }
-
         $config = require $file->getRealPath();
+
         if (!is_array($config)) {
             throw new \RuntimeException('Invalid config file');
         }
 
         return $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configFileExtensions(): array
+    {
+        return ['php'];
     }
 }

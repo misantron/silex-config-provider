@@ -2,8 +2,6 @@
 
 namespace Misantron\Silex\Provider;
 
-
-use Misantron\Silex\Provider\Adapter\ConfigAdapterInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -29,17 +27,13 @@ class ConfigServiceProvider implements ServiceProviderInterface
     private $key;
 
     /**
-     * @param ConfigAdapterInterface $adapter
+     * @param ConfigAdapter $adapter
      * @param array $paths
      * @param array $replacements
      * @param string $key
      */
-    public function __construct(
-        ConfigAdapterInterface $adapter,
-        array $paths,
-        array $replacements = [],
-        string $key = 'config'
-    ) {
+    public function __construct(ConfigAdapter $adapter, array $paths, array $replacements = [], string $key = 'config')
+    {
         $files = array_filter($paths, function ($file) {
             return file_exists($file);
         });

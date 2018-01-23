@@ -2,30 +2,25 @@
 
 namespace Misantron\Silex\Provider\Adapter;
 
+use Misantron\Silex\Provider\ConfigAdapter;
 
 /**
  * Class TomlConfigAdapter
  * @package Misantron\Silex\Provider\Adapter
  */
-class TomlConfigAdapter implements ConfigAdapterInterface
+class TomlConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
-     * @return array
+     * {@inheritdoc}
      */
-    public function load(\SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
         // @codeCoverageIgnoreStart
-        if (!class_exists('Toml')) {
+        if (!class_exists('\\Toml')) {
             throw new \RuntimeException('Toml parser component is not installed');
         }
         // @codeCoverageIgnoreEnd
-        if (!$file->isReadable()) {
-            throw new \RuntimeException('Config file is not readable');
-        }
-        if ($file->getExtension() !== 'toml') {
-            throw new \RuntimeException('Invalid config file type provided');
-        }
+
         try {
             $config = \Toml::parseFile($file->getRealPath());
         } catch (\Exception $e) {
@@ -33,5 +28,13 @@ class TomlConfigAdapter implements ConfigAdapterInterface
         }
 
         return $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configFileExtensions(): array
+    {
+        return ['toml'];
     }
 }

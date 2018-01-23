@@ -2,9 +2,8 @@
 
 namespace Misantron\Silex\Provider\Tests;
 
-
-use Misantron\Silex\Provider\Adapter\ConfigAdapterInterface;
 use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
+use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\ConfigServiceProvider;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
@@ -13,8 +12,8 @@ class ConfigServiceProviderTest extends TestCase
 {
     public function testDefaultConstructor()
     {
-        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
-        $adapter = $this->createMock(ConfigAdapterInterface::class);
+        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn(['foo' => 'bar']);
 
@@ -30,8 +29,8 @@ class ConfigServiceProviderTest extends TestCase
 
     public function testConstructor()
     {
-        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
-        $adapter = $this->createMock(ConfigAdapterInterface::class);
+        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn(['foo' => 'bar']);
 
@@ -53,8 +52,8 @@ class ConfigServiceProviderTest extends TestCase
      */
     public function testConstructorWithEmptyConfig()
     {
-        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
-        $adapter = $this->createMock(ConfigAdapterInterface::class);
+        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn([]);
 
@@ -81,8 +80,8 @@ class ConfigServiceProviderTest extends TestCase
             ],
         ];
 
-        /** @var ConfigAdapterInterface|\PHPUnit_Framework_MockObject_MockObject $adapter */
-        $adapter = $this->createMock(ConfigAdapterInterface::class);
+        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn([
             'debug' => true,
