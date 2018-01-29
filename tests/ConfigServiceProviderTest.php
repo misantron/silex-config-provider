@@ -103,6 +103,36 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertEquals($twig, $app['config']['twig']);
     }
 
+    public function testRegisterWithEnvironmentVariables()
+    {
+        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapter::class);
+
+        $adapter->method('load')->willReturn([
+            'env.var' => '%env(ENV_VAR)%',
+            'env.var.1' => '%env(ENV_VAR_1)%',
+            'envvar' => '%env(ENVVAR)%',
+            'envvar1' => '%env(ENVVAR1)%',
+        ]);
+        
+        putenv('ENV_VAR', 'foo');
+        putenv('ENV_VAR_1', 'bar');
+        putenv('ENVVAR', 'baz');
+        putenv('ENVVAR1', 'foobar');
+
+        $app = new Application(['debug' => false]);
+        $app->register(new ConfigServiceProvider(
+            $adapter,
+            [__DIR__ . '/resources/base.php']
+        ));
+
+        $this->assertArrayHasKey('config', $app);
+        $this->assertEquals('foo', $app['config']['env.var']);
+        $this->assertEquals('bar', $app['config']['env.var.1']);
+        $this->assertEquals('baz', $app['config']['envvar']);
+        $this->assertEquals('foobar', $app['config']['envvar1']);
+    }
+
     public function testRegisterWithConfigFilesMergeAndReplacements()
     {
         $root = realpath(__DIR__ . '/..');
