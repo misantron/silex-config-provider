@@ -105,6 +105,8 @@ class ConfigServiceProviderTest extends TestCase
 
     public function testRegisterWithEnvironmentVariables()
     {
+        $root = realpath(__DIR__ . '/..');
+
         /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
@@ -118,19 +120,20 @@ class ConfigServiceProviderTest extends TestCase
         putenv('ENV_VAR', 'foo');
         putenv('ENV_VAR_1', 'bar');
         putenv('ENVVAR', 'baz');
-        putenv('ENVVAR1', 'foobar');
+        putenv('ENVVAR1', '%ROOT_PATH%');
 
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php']
+            [__DIR__ . '/resources/base.php'],
+            ['ROOT_PATH' => $root]
         ));
 
         $this->assertArrayHasKey('config', $app);
         $this->assertEquals('foo', $app['config']['env.var']);
         $this->assertEquals('bar', $app['config']['env.var.1']);
         $this->assertEquals('baz', $app['config']['envvar']);
-        $this->assertEquals('foobar', $app['config']['envvar1']);
+        $this->assertEquals($root, $app['config']['envvar1']);
     }
 
     public function testRegisterWithConfigFilesMergeAndReplacements()

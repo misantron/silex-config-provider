@@ -90,7 +90,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
     {
         // replace special %env(VAR)% syntax with values from the environment
         if (preg_match('/%env\(([a-zA-Z0-9_-]+)\)%/', $value, $matches)) {
-            return getenv($matches[1]);
+            $value = getenv($matches[1]);
         }
 
         return strtr($value, $this->replacements);
