@@ -114,7 +114,7 @@ class ConfigServiceProviderTest extends TestCase
             'envvar' => '%env(ENVVAR)%',
             'envvar1' => '%env(ENVVAR1)%',
         ]);
-        
+
         putenv('ENV_VAR', 'foo');
         putenv('ENV_VAR_1', 'bar');
         putenv('ENVVAR', 'baz');
