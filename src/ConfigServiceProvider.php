@@ -88,6 +88,11 @@ class ConfigServiceProvider implements ServiceProviderInterface
      */
     private function doReplacementsInString(string $value): string
     {
+        // replace special %env(VAR)% syntax with values from the environment
+        if (preg_match('/%env\(([a-zA-Z0-9_-]+)\)%/', $value, $matches)) {
+            $value = getenv($matches[1]);
+        }
+
         return strtr($value, $this->replacements);
     }
 
