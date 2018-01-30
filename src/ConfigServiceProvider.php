@@ -37,6 +37,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $files = array_filter($paths, function ($file) {
             return file_exists($file);
         });
+        /** @var array $config */
         $config = array_reduce($files, function (array $carry, string $path) use ($adapter) {
             $file = new \SplFileInfo($path);
             if ($file->isFile()) {
@@ -46,7 +47,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
             return $carry;
         }, []);
 
-        if (empty($config)) {
+        if (empty($config) || !is_array($config)) {
             throw new \RuntimeException('Config is empty');
         }
 
