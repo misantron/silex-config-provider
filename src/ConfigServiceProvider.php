@@ -53,8 +53,8 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $this->key = $key;
         $this->config = $config;
 
-        foreach ($replacements as $key => $value) {
-            $this->replacements['%' . $key . '%'] = $value;
+        foreach ($replacements as $placeholder => $value) {
+            $this->replacements['%' . $placeholder . '%'] = $value;
         }
     }
 

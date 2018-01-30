@@ -11,15 +11,12 @@ use Misantron\Silex\Provider\ConfigAdapter;
 class TomlConfigAdapter extends ConfigAdapter
 {
     /**
-     * {@inheritdoc}
+     * @param \SplFileInfo $file
+     * @return array
      */
     protected function parse(\SplFileInfo $file): array
     {
-        // @codeCoverageIgnoreStart
-        if (!class_exists('\\Toml')) {
-            throw new \RuntimeException('Toml parser component is not installed');
-        }
-        // @codeCoverageIgnoreEnd
+        $this->assertLibraryInstalled();
 
         try {
             $config = \Toml::parseFile($file->getRealPath());
@@ -31,10 +28,22 @@ class TomlConfigAdapter extends ConfigAdapter
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     protected function configFileExtensions(): array
     {
         return ['toml'];
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    private function assertLibraryInstalled()
+    {
+        // @codeCoverageIgnoreStart
+        if (!class_exists('\\Toml')) {
+            throw new \RuntimeException('Toml parser component is not installed');
+        }
+        // @codeCoverageIgnoreEnd
     }
 }

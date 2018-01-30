@@ -1,5 +1,5 @@
 filter:
-  excluded_paths: [tests/*]
+  excluded_paths: [vendor/*, tests/*]
 checks:
   php:
     code_rating: true
@@ -7,3 +7,5 @@ checks:
     remove_trailing_whitespace: true
     fix_identation_4spaces: true
     fix_doc_comments: true
+tools:
+  external_code_coverage: true

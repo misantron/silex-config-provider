@@ -11,7 +11,8 @@ use Misantron\Silex\Provider\ConfigAdapter;
 class XmlConfigAdapter extends ConfigAdapter
 {
     /**
-     * {@inheritdoc}
+     * @param \SplFileInfo $file
+     * @return array
      */
     protected function parse(\SplFileInfo $file): array
     {
@@ -33,7 +34,7 @@ class XmlConfigAdapter extends ConfigAdapter
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     protected function configFileExtensions(): array
     {
