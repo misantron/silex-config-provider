@@ -117,10 +117,10 @@ class ConfigServiceProviderTest extends TestCase
             'envvar1' => '%env(ENVVAR1)%',
         ]);
 
-        putenv('ENV_VAR', 'foo');
-        putenv('ENV_VAR_1', 'bar');
-        putenv('ENVVAR', 'baz');
-        putenv('ENVVAR1', '%ROOT_PATH%');
+        putenv('ENV_VAR=foo');
+        putenv('ENV_VAR_1=bar');
+        putenv('ENVVAR=baz');
+        putenv('ENVVAR1=%ROOT_PATH%');
 
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
