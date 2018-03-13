@@ -16,7 +16,10 @@ class IniConfigAdapter extends ConfigAdapter
      */
     protected function parse(\SplFileInfo $file): array
     {
-        $config = parse_ini_file($file->getRealPath());
+        $config = @parse_ini_file($file->getRealPath());
+        if ($config === false) {
+            throw new \RuntimeException('Unable to parse config: invalid format');
+        }
 
         return $config;
     }
