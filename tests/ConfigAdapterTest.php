@@ -43,8 +43,9 @@ class ConfigAdapterTest extends TestCase
         /** @var \SplFileInfo|MockObject $file */
         $file = $this->createMock(\SplFileInfo::class);
 
-        $file->method('getExtension')->willReturn('ini');
-        $file->method('isReadable')->willReturn(false);
+        $file
+            ->method('isReadable')
+            ->willReturn(false);
 
         $this->adapter->load($file);
     }
