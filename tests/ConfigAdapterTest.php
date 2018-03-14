@@ -38,6 +38,17 @@ class ConfigAdapterTest extends TestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Config file is not readable
      */
+    public function testLoadNotExistsConfigFile()
+    {
+        $file = new \SplFileInfo(__DIR__ . '/../resources/not_exists.ext');
+
+        $this->adapter->load($file);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Config file is not readable
+     */
     public function testLoadNotReadableConfig()
     {
         /** @var \SplFileInfo|MockObject $file */

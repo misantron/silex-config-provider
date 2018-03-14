@@ -16,7 +16,7 @@ class PhpConfigAdapter extends ConfigAdapter
      */
     protected function parse(\SplFileInfo $file): array
     {
-        $config = require $file->getRealPath();
+        $config = require_once $file->getRealPath();
 
         if (!is_array($config)) {
             throw new \RuntimeException('Invalid config file');
