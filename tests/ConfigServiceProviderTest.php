@@ -63,6 +63,23 @@ class ConfigServiceProviderTest extends TestCase
         );
     }
 
+    public function testSetConfigContainerKey()
+    {
+        /** @var ConfigAdapter|MockObject $adapter */
+        $adapter = $this->createMock(ConfigAdapter::class);
+
+        $adapter->method('load')->willReturn(['foo' => 'bar']);
+
+        $provider = new ConfigServiceProvider(
+            $adapter,
+            [__DIR__ . '/resources/base.php'],
+            ['root' => __DIR__]
+        );
+        $provider->setConfigContainerKey('custom');
+
+        $this->assertAttributeEquals('custom', 'key', $provider);
+    }
+
     public function testRegister()
     {
         $dbOptions = [
