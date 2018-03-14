@@ -99,6 +99,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }
     }
 
+    /**
+     * @param Container $app
+     */
     private function doConfigReplacements(Container $app)
     {
         foreach ($this->config as $name => $value) {
