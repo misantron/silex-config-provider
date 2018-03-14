@@ -19,44 +19,35 @@ class ConfigServiceProvider implements ServiceProviderInterface
     /**
      * @var array
      */
-    private $replacements = [];
+    private $replacements;
 
     /**
      * @var string
      */
-    private $key;
+    private $key = 'config';
 
     /**
      * @param ConfigAdapter $adapter
      * @param array $paths
      * @param array $replacements
-     * @param string $key
      */
-    public function __construct(ConfigAdapter $adapter, array $paths, array $replacements = [], string $key = 'config')
+    public function __construct(ConfigAdapter $adapter, array $paths, array $replacements = [])
     {
-        $files = array_filter($paths, function ($file) {
-            return file_exists($file);
-        });
-        /** @var array $config */
-        $config = array_reduce($files, function (array $carry, string $path) use ($adapter) {
-            $file = new \SplFileInfo($path);
-            if ($file->isFile()) {
-                $config = $adapter->load($file);
-                $carry = array_replace_recursive($carry, $config);
-            }
-            return $carry;
-        }, []);
+        $this->config = $this->createConfigFromPaths($adapter, $paths);
 
-        if (empty($config) || !is_array($config)) {
+        if (empty($this->config)) {
             throw new \RuntimeException('Config is empty');
         }
 
-        $this->key = $key;
-        $this->config = $config;
+        $this->createReplacements($replacements);
+    }
 
-        foreach ($replacements as $placeholder => $value) {
-            $this->replacements['%' . $placeholder . '%'] = $value;
-        }
+    /**
+     * @param string $key
+     */
+    public function setConfigContainerKey(string $key)
+    {
+        $this->key = $key;
     }
 
     /**
@@ -68,11 +59,49 @@ class ConfigServiceProvider implements ServiceProviderInterface
             $app[$this->key] = new Container();
         }
 
-        foreach ($this->config as $name => $value) {
-            if ($name === 'debug') {
-                $app[$name] = $value;
-                continue;
+        // exceptional handler for application debug flag
+        if (isset($this->config['debug'])) {
+            $app['debug'] = $this->config['debug'];
+            unset($this->config['debug']);
+        }
+
+        $this->doConfigReplacements($app);
+    }
+
+    /**
+     * @param ConfigAdapter $adapter
+     * @param array $paths
+     * @return array
+     */
+    private function createConfigFromPaths(ConfigAdapter $adapter, array $paths): array
+    {
+        $files = array_filter($paths, function ($file) {
+            return file_exists($file);
+        });
+        return array_reduce($files, function (array $carry, string $path) use ($adapter) {
+            $file = new \SplFileInfo($path);
+            if ($file->isFile()) {
+                $config = $adapter->load($file);
+                $carry = array_replace_recursive($carry, $config);
             }
+            return $carry;
+        }, []);
+    }
+
+    /**
+     * @param array $replacements
+     */
+    private function createReplacements(array $replacements)
+    {
+        $this->replacements = [];
+        foreach ($replacements as $placeholder => $value) {
+            $this->replacements['%' . $placeholder . '%'] = $value;
+        }
+    }
+
+    private function doConfigReplacements(Container $app)
+    {
+        foreach ($this->config as $name => $value) {
             if (is_array($value)) {
                 $app[$this->key][$name] = $this->doReplacementsInArray($value);
             } elseif (is_string($value)) {

@@ -5,6 +5,7 @@ namespace Misantron\Silex\Provider\Tests;
 use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\ConfigServiceProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
 
@@ -12,7 +13,7 @@ class ConfigServiceProviderTest extends TestCase
 {
     public function testDefaultConstructor()
     {
-        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn(['foo' => 'bar']);
@@ -29,7 +30,7 @@ class ConfigServiceProviderTest extends TestCase
 
     public function testConstructor()
     {
-        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn(['foo' => 'bar']);
@@ -37,13 +38,12 @@ class ConfigServiceProviderTest extends TestCase
         $provider = new ConfigServiceProvider(
             $adapter,
             [__DIR__ . '/resources/base.php'],
-            ['root' => __DIR__],
-            'conf'
+            ['root' => __DIR__]
         );
 
         $this->assertAttributeEquals(['foo' => 'bar'], 'config', $provider);
         $this->assertAttributeEquals(['%root%' => __DIR__], 'replacements', $provider);
-        $this->assertAttributeEquals('conf', 'key', $provider);
+        $this->assertAttributeEquals('config', 'key', $provider);
     }
 
     /**
@@ -52,7 +52,7 @@ class ConfigServiceProviderTest extends TestCase
      */
     public function testConstructorWithEmptyConfig()
     {
-        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn([]);
@@ -80,7 +80,7 @@ class ConfigServiceProviderTest extends TestCase
             ],
         ];
 
-        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn([
@@ -107,7 +107,7 @@ class ConfigServiceProviderTest extends TestCase
     {
         $root = realpath(__DIR__ . '/..');
 
-        /** @var ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject $adapter */
+        /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
         $adapter->method('load')->willReturn([
