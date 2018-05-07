@@ -22,7 +22,7 @@ class YamlConfigAdapter extends ConfigAdapter
         $this->assertLibraryInstalled();
 
         try {
-            $config = (new Parser())->parse(file_get_contents($file->getRealPath()));
+            $config = (new Parser())->parseFile($file->getRealPath());
         } catch (ParseException $e) {
             throw new \RuntimeException('Unable to parse config file: ' . $e->getMessage());
         }
