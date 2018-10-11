@@ -10,7 +10,7 @@ Config service provider for [Silex](http://silex.sensiolabs.org) framework with 
 
 ## Features
 
-- Support different formats of config files: php, json, ini, xml, toml (require leonelquinteros/php-toml) and yaml (require symfony/yaml)
+- Support different formats of config files: php, json, ini, xml, toml (require [leonelquinteros/php-toml](https://github.com/leonelquinteros/php-toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
 - Multiple config file processing
 - On load placeholder replacements
 - PHP7 support

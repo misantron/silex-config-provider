@@ -18,6 +18,9 @@
   ],
   "require": {
     "php": ">=7.0",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-simplexml": "*",
     "silex/silex": "~2.0"
   },
   "require-dev": {

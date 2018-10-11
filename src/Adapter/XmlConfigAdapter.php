@@ -16,6 +16,8 @@ class XmlConfigAdapter extends ConfigAdapter
      */
     protected function parse(\SplFileInfo $file): array
     {
+        $this->assertComponentInstalled();
+
         libxml_use_internal_errors(true);
 
         $xml = simplexml_load_file($file->getRealPath());
@@ -39,5 +41,17 @@ class XmlConfigAdapter extends ConfigAdapter
     protected function configFileExtensions(): array
     {
         return ['xml'];
+    }
+
+    /**
+     *
+     */
+    private function assertComponentInstalled()
+    {
+        // @codeCoverageIgnoreStart
+        if (!class_exists('SimpleXMLElement')) {
+            throw new \RuntimeException('SimpleXML component is not installed');
+        }
+        // @codeCoverageIgnoreEnd
     }
 }

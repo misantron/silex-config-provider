@@ -19,7 +19,7 @@ class YamlConfigAdapter extends ConfigAdapter
      */
     protected function parse(\SplFileInfo $file): array
     {
-        $this->assertLibraryInstalled();
+        $this->assertComponentInstalled();
 
         try {
             $config = (new Parser())->parseFile($file->getRealPath());
@@ -41,7 +41,7 @@ class YamlConfigAdapter extends ConfigAdapter
     /**
      * @throws \RuntimeException
      */
-    private function assertLibraryInstalled()
+    private function assertComponentInstalled()
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('Symfony\\Component\\Yaml\\Yaml')) {

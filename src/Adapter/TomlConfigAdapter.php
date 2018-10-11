@@ -16,7 +16,7 @@ class TomlConfigAdapter extends ConfigAdapter
      */
     protected function parse(\SplFileInfo $file): array
     {
-        $this->assertLibraryInstalled();
+        $this->assertComponentInstalled();
 
         try {
             $config = \Toml::parseFile($file->getRealPath());
@@ -38,7 +38,7 @@ class TomlConfigAdapter extends ConfigAdapter
     /**
      * @throws \RuntimeException
      */
-    private function assertLibraryInstalled()
+    private function assertComponentInstalled()
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('\\Toml')) {
