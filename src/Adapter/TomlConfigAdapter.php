@@ -3,6 +3,8 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 use Misantron\Silex\Provider\ConfigAdapter;
+use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 
 /**
  * Class TomlConfigAdapter
@@ -13,15 +15,15 @@ class TomlConfigAdapter extends ConfigAdapter
     /**
      * @param \SplFileInfo $file
      * @return array
+     *
+     * @throws ConfigurationParseException
      */
     protected function parse(\SplFileInfo $file): array
     {
-        $this->assertComponentInstalled();
-
         try {
             $config = \Toml::parseFile($file->getRealPath());
         } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to parse config file: ' . $e->getMessage());
+            throw new ConfigurationParseException('Unable to parse config file: ' . $e->getMessage());
         }
 
         return $config;
@@ -36,13 +38,13 @@ class TomlConfigAdapter extends ConfigAdapter
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws ComponentNotInstalledException
      */
-    private function assertComponentInstalled()
+    protected function assertComponentInstalled()
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('\\Toml')) {
-            throw new \RuntimeException('Toml parser component is not installed');
+            throw new ComponentNotInstalledException('Toml parser component is not installed');
         }
         // @codeCoverageIgnoreEnd
     }

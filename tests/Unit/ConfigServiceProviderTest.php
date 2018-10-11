@@ -5,6 +5,7 @@ namespace Misantron\Silex\Provider\Tests\Unit;
 use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\ConfigServiceProvider;
+use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
@@ -46,12 +47,11 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertAttributeEquals('config', 'key', $provider);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Config is empty
-     */
-    public function testConstructorWithEmptyConfig()
+    public function testConstructorWithEmptyConfigData()
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('No configuration data provided');
+
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 

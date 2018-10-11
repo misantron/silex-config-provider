@@ -3,6 +3,7 @@
 namespace Misantron\Silex\Provider\Tests\Unit;
 
 use Misantron\Silex\Provider\ConfigAdapter;
+use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,23 +34,21 @@ class ConfigAdapterTest extends TestCase
         };
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Config file is not readable
-     */
     public function testLoadNotExistsConfigFile()
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Configuration file is not readable');
+
         $file = new \SplFileInfo(__DIR__ . '/../resources/not_exists.ext');
 
         $this->adapter->load($file);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Config file is not readable
-     */
     public function testLoadNotReadableConfig()
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Configuration file is not readable');
+
         /** @var \SplFileInfo|MockObject $file */
         $file = $this->createMock(\SplFileInfo::class);
 
@@ -60,12 +59,11 @@ class ConfigAdapterTest extends TestCase
         $this->adapter->load($file);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Invalid config file type provided
-     */
     public function testLoadConfigWithInvalidExtension()
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration file type provided');
+
         $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.ext');
 
         $this->adapter->load($file);

@@ -3,6 +3,7 @@
 namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\XmlConfigAdapter;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -15,12 +16,11 @@ class XmlConfigAdapterTest extends TestCase
         $this->adapter = new XmlConfigAdapter();
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to parse config file: xmlParseEntityRef: no name
-     */
     public function testLoadInvalidConfigFile()
     {
+        $this->expectException(ConfigurationParseException::class);
+        $this->expectExceptionMessage('Unable to parse config file: xmlParseEntityRef: no name');
+
         $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.xml');
 
         $this->adapter->load($file);

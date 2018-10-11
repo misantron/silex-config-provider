@@ -3,6 +3,7 @@
 namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\JsonConfigAdapter;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -15,12 +16,11 @@ class JsonConfigAdapterTest extends TestCase
         $this->adapter = new JsonConfigAdapter();
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to parse JSON file: Syntax error
-     */
     public function testLoadInvalidConfigFile()
     {
+        $this->expectException(ConfigurationParseException::class);
+        $this->expectExceptionMessage('Unable to parse json file: Syntax error');
+
         $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.json');
 
         $this->adapter->load($file);

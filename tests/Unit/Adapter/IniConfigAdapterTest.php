@@ -3,6 +3,7 @@
 namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\IniConfigAdapter;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -15,12 +16,11 @@ class IniConfigAdapterTest extends TestCase
         $this->adapter = new IniConfigAdapter();
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to parse config: invalid format
-     */
     public function testLoadInvalidConfigFile()
     {
+        $this->expectException(ConfigurationParseException::class);
+        $this->expectExceptionMessage('Unable to parse configuration: invalid format');
+
         $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.ini');
 
         $this->adapter->load($file);

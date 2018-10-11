@@ -3,10 +3,10 @@
 namespace Misantron\Silex\Provider\Exception;
 
 /**
- * Class ConfigParseException
+ * Class InvalidConfigurationException
  * @package Misantron\Silex\Provider\Exception
  */
-class ConfigParseException extends \RuntimeException
+class InvalidConfigurationException extends \RuntimeException
 {
 
 }

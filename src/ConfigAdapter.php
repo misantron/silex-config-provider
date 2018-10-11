@@ -2,6 +2,10 @@
 
 namespace Misantron\Silex\Provider;
 
+use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
+use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
+
 /**
  * Class ConfigAdapter
  * @package Misantron\Silex\Provider\Adapter
@@ -15,6 +19,7 @@ abstract class ConfigAdapter
     public function load(\SplFileInfo $file): array
     {
         $this->validateFile($file);
+        $this->assertComponentInstalled();
 
         return $this->parse($file);
     }
@@ -22,6 +27,8 @@ abstract class ConfigAdapter
     /**
      * @param \SplFileInfo $file
      * @return array
+     *
+     * @throws ConfigurationParseException
      */
     abstract protected function parse(\SplFileInfo $file): array;
 
@@ -31,17 +38,26 @@ abstract class ConfigAdapter
     abstract protected function configFileExtensions(): array;
 
     /**
+     * @throws ComponentNotInstalledException
+     */
+    protected function assertComponentInstalled()
+    {
+
+    }
+
+    /**
      * @param \SplFileInfo $file
-     * @throws \RuntimeException
+     *
+     * @throws InvalidConfigurationException
      */
     private function validateFile(\SplFileInfo $file)
     {
         if (!$file->isReadable()) {
-            throw new \RuntimeException('Config file is not readable');
+            throw new InvalidConfigurationException('Configuration file is not readable');
         }
         $validExtensions = $this->configFileExtensions();
         if (!in_array($file->getExtension(), $validExtensions, true)) {
-            throw new \RuntimeException('Invalid config file type provided');
+            throw new InvalidConfigurationException('Invalid configuration file type provided');
         }
     }
 }

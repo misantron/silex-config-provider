@@ -3,6 +3,8 @@
 namespace Misantron\Silex\Provider\Adapter;
 
 use Misantron\Silex\Provider\ConfigAdapter;
+use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 
 /**
  * Class XmlConfigAdapter
@@ -13,11 +15,11 @@ class XmlConfigAdapter extends ConfigAdapter
     /**
      * @param \SplFileInfo $file
      * @return array
+     *
+     * @throws ConfigurationParseException
      */
     protected function parse(\SplFileInfo $file): array
     {
-        $this->assertComponentInstalled();
-
         libxml_use_internal_errors(true);
 
         $xml = simplexml_load_file($file->getRealPath());
@@ -27,7 +29,7 @@ class XmlConfigAdapter extends ConfigAdapter
             }, libxml_get_errors());
             libxml_clear_errors();
 
-            throw new \RuntimeException('Unable to parse config file: ' . implode(', ', $errors));
+            throw new ConfigurationParseException('Unable to parse config file: ' . implode(', ', $errors));
         }
 
         $config = json_decode(json_encode($xml), true);
@@ -44,13 +46,13 @@ class XmlConfigAdapter extends ConfigAdapter
     }
 
     /**
-     *
+     * @throws ComponentNotInstalledException
      */
-    private function assertComponentInstalled()
+    protected function assertComponentInstalled()
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('SimpleXMLElement')) {
-            throw new \RuntimeException('SimpleXML component is not installed');
+            throw new ComponentNotInstalledException('SimpleXML component is not installed');
         }
         // @codeCoverageIgnoreEnd
     }

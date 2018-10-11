@@ -2,6 +2,7 @@
 
 namespace Misantron\Silex\Provider;
 
+use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -30,13 +31,15 @@ class ConfigServiceProvider implements ServiceProviderInterface
      * @param ConfigAdapter $adapter
      * @param array $paths
      * @param array $replacements
+     *
+     * @throws InvalidConfigurationException
      */
     public function __construct(ConfigAdapter $adapter, array $paths, array $replacements = [])
     {
         $this->config = $this->createConfigFromPaths($adapter, $paths);
 
         if (empty($this->config)) {
-            throw new \RuntimeException('Config is empty');
+            throw new InvalidConfigurationException('No configuration data provided');
         }
 
         $this->createReplacements($replacements);

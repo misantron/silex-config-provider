@@ -3,6 +3,7 @@
 namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\YamlConfigAdapter;
+use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -15,12 +16,11 @@ class YamlConfigAdapterTest extends TestCase
         $this->adapter = new YamlConfigAdapter();
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to parse config file: Malformed inline YAML string: {bar} test at line 1 (near "foo: {bar} test").
-     */
     public function testLoadInvalidConfigFile()
     {
+        $this->expectException(ConfigurationParseException::class);
+        $this->expectExceptionMessage('Unable to parse config file: Malformed inline YAML string: {bar} test at line 1 (near "foo: {bar} test").');
+
         $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.yml');
 
         $this->adapter->load($file);
