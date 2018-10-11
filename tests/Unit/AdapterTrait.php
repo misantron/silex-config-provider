@@ -1,13 +1,12 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests;
-
+namespace Misantron\Silex\Provider\Tests\Unit;
 
 use Misantron\Silex\Provider\ConfigAdapter;
 
 /**
  * Trait AdapterTestCase
- * @package Misantron\Silex\Provider\Tests
+ * @package Misantron\Silex\Provider\Tests\Unit
  */
 trait AdapterTrait
 {

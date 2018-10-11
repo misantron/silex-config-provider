@@ -1,10 +1,9 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests\Adapter;
-
+namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\XmlConfigAdapter;
-use Misantron\Silex\Provider\Tests\AdapterTrait;
+use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
 class XmlConfigAdapterTest extends TestCase
@@ -22,14 +21,14 @@ class XmlConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigFile()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.xml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.xml');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.xml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.xml');
 
         $config = $this->adapter->load($file);
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests\Adapter;
-
+namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\YamlConfigAdapter;
-use Misantron\Silex\Provider\Tests\AdapterTrait;
+use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
 class YamlConfigAdapterTest extends TestCase
@@ -22,14 +21,14 @@ class YamlConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigFile()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.yml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.yml');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.yml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.yml');
 
         $config = $this->adapter->load($file);
 

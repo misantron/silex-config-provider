@@ -4,6 +4,11 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: nightly
 
 sudo: false
 
@@ -18,7 +23,7 @@ install:
   - travis_retry composer install --prefer-dist --no-interaction
 
 script:
-  - vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
+  - vendor/bin/phpunit --testsuite unit --verbose --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar

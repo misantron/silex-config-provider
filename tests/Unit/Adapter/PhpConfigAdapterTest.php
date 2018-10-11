@@ -1,10 +1,9 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests\Adapter;
-
+namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
-use Misantron\Silex\Provider\Tests\AdapterTrait;
+use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
 class PhpConfigAdapterTest extends TestCase
@@ -22,14 +21,14 @@ class PhpConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigFile()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.php');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.php');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.php');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.php');
 
         $config = $this->adapter->load($file);
 

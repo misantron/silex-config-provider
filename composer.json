@@ -1,33 +1,42 @@
 {
-    "name": "misantron/silex-config-provider",
-    "description": "Config service provider for Silex framework with support for php, json, ini, xml, yaml and toml",
-    "keywords": ["php", "silex", "config", "provider"],
-    "homepage": "https://github.com/misantron/silex-config-provider",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Alexandr Ivanov",
-            "email": "misantron@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.0",
-        "silex/silex": "~2.0"
-    },
-    "require-dev": {
-        "leonelquinteros/php-toml": "~0.4",
-        "phpunit/phpunit": "~6.0",
-        "symfony/yaml": "~3.0|~4.0"
-    },
-    "autoload": {
-        "psr-4": { "Misantron\\Silex\\Provider\\": "src/" }
-    },
-    "autoload-dev": {
-        "psr-4": { "Misantron\\Silex\\Provider\\Tests\\": "tests/" }
-    },
-    "config": {
-        "sort-packages": true,
-        "optimize-autoloader": true
+  "name": "misantron/silex-config-provider",
+  "description": "Config service provider for Silex framework with support for php, json, ini, xml, yaml and toml",
+  "keywords": [
+    "php",
+    "silex",
+    "config",
+    "provider"
+  ],
+  "homepage": "https://github.com/misantron/silex-config-provider",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexandr Ivanov",
+      "email": "misantron@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "silex/silex": "~2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.5",
+    "symfony/yaml": "~3.0|~4.0",
+    "leonelquinteros/php-toml": "~0.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Misantron\\Silex\\Provider\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Misantron\\Silex\\Provider\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
 }

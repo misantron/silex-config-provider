@@ -1,10 +1,9 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests\Adapter;
-
+namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\TomlConfigAdapter;
-use Misantron\Silex\Provider\Tests\AdapterTrait;
+use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
 
 class TomlConfigAdapterTest extends TestCase
@@ -22,14 +21,14 @@ class TomlConfigAdapterTest extends TestCase
      */
     public function testLoadInvalidConfigFile()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.toml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.toml');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../resources/base.toml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.toml');
 
         $config = $this->adapter->load($file);
 

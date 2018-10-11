@@ -1,6 +1,6 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests;
+namespace Misantron\Silex\Provider\Tests\Unit;
 
 use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
 use Misantron\Silex\Provider\ConfigAdapter;
@@ -20,7 +20,7 @@ class ConfigServiceProviderTest extends TestCase
 
         $provider = new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php']
+            [__DIR__ . '/../resources/base.php']
         );
 
         $this->assertAttributeEquals(['foo' => 'bar'], 'config', $provider);
@@ -37,7 +37,7 @@ class ConfigServiceProviderTest extends TestCase
 
         $provider = new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php'],
+            [__DIR__ . '/../resources/base.php'],
             ['root' => __DIR__]
         );
 
@@ -59,7 +59,7 @@ class ConfigServiceProviderTest extends TestCase
 
         new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php']
+            [__DIR__ . '/../resources/base.php']
         );
     }
 
@@ -72,7 +72,7 @@ class ConfigServiceProviderTest extends TestCase
 
         $provider = new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php'],
+            [__DIR__ . '/../resources/base.php'],
             ['root' => __DIR__]
         );
         $provider->setConfigContainerKey('custom');
@@ -110,7 +110,7 @@ class ConfigServiceProviderTest extends TestCase
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php']
+            [__DIR__ . '/../resources/base.php']
         ));
 
         $this->assertEquals(true, $app['debug']);
@@ -142,7 +142,7 @@ class ConfigServiceProviderTest extends TestCase
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
             $adapter,
-            [__DIR__ . '/resources/base.php'],
+            [__DIR__ . '/../resources/base.php'],
             ['ROOT_PATH' => $root]
         ));
 
@@ -161,8 +161,8 @@ class ConfigServiceProviderTest extends TestCase
         $app->register(new ConfigServiceProvider(
             new PhpConfigAdapter(),
             [
-                __DIR__ . '/resources/common.php',
-                __DIR__ . '/resources/app.php',
+                __DIR__ . '/../resources/common.php',
+                __DIR__ . '/../resources/app.php',
             ],
             [
                 'ROOT_PATH' => $root,

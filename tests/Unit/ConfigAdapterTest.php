@@ -1,7 +1,6 @@
 <?php
 
-namespace Misantron\Silex\Provider\Tests;
-
+namespace Misantron\Silex\Provider\Tests\Unit;
 
 use Misantron\Silex\Provider\ConfigAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -67,7 +66,7 @@ class ConfigAdapterTest extends TestCase
      */
     public function testLoadConfigWithInvalidExtension()
     {
-        $file = new \SplFileInfo(__DIR__ . '/resources/invalid.ext');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.ext');
 
         $this->adapter->load($file);
     }
