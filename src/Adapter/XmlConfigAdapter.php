@@ -2,9 +2,12 @@
 
 namespace Misantron\Silex\Provider\Adapter;
 
+use LibXMLError;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
+use SimpleXMLElement;
+use SplFileInfo;
 
 /**
  * Class XmlConfigAdapter
@@ -13,18 +16,18 @@ use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 class XmlConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @return array
      *
      * @throws ConfigurationParseException
      */
-    protected function parse(\SplFileInfo $file): array
+    protected function parse(SplFileInfo $file): array
     {
         libxml_use_internal_errors(true);
 
-        $xml = simplexml_load_file($file->getRealPath());
-        if (!$xml instanceof \SimpleXMLElement) {
-            $errors = array_map(function (\LibXMLError $error) {
+        $xml = simplexml_load_string(file_get_contents($file->getRealPath()));
+        if (!$xml instanceof SimpleXMLElement) {
+            $errors = array_map(static function (LibXMLError $error) {
                 return trim($error->message);
             }, libxml_get_errors());
             libxml_clear_errors();
@@ -32,9 +35,7 @@ class XmlConfigAdapter extends ConfigAdapter
             throw new ConfigurationParseException('Unable to parse config file: ' . implode(', ', $errors));
         }
 
-        $config = json_decode(json_encode($xml), true);
-
-        return $config;
+        return json_decode(json_encode($xml), true);
     }
 
     /**

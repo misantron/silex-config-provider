@@ -6,6 +6,7 @@ use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 
 class PhpConfigAdapterTest extends TestCase
 {
@@ -21,14 +22,14 @@ class PhpConfigAdapterTest extends TestCase
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Invalid configuration file');
 
-        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.php');
+        $file = new SplFileInfo(__DIR__ . '/../../resources/invalid.php');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.php');
+        $file = new SplFileInfo(__DIR__ . '/../../resources/base.php');
 
         $config = $this->adapter->load($file);
 

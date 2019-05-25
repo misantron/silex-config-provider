@@ -4,6 +4,7 @@ namespace Misantron\Silex\Provider\Adapter;
 
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
+use SplFileInfo;
 
 /**
  * Class JsonConfigAdapter
@@ -12,12 +13,12 @@ use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 class JsonConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @return array
      *
      * @throws ConfigurationParseException
      */
-    protected function parse(\SplFileInfo $file): array
+    protected function parse(SplFileInfo $file): array
     {
         $config = json_decode(file_get_contents($file->getRealPath()), true);
         if (json_last_error() !== JSON_ERROR_NONE) {

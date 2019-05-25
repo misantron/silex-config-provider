@@ -5,6 +5,7 @@ namespace Misantron\Silex\Provider;
 use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
+use SplFileInfo;
 
 /**
  * Class ConfigAdapter
@@ -13,10 +14,10 @@ use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 abstract class ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @return array
      */
-    public function load(\SplFileInfo $file): array
+    public function load(SplFileInfo $file): array
     {
         $this->validateFile($file);
         $this->assertComponentInstalled();
@@ -25,12 +26,12 @@ abstract class ConfigAdapter
     }
 
     /**
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @return array
      *
      * @throws ConfigurationParseException
      */
-    abstract protected function parse(\SplFileInfo $file): array;
+    abstract protected function parse(SplFileInfo $file): array;
 
     /**
      * @return array
@@ -46,11 +47,11 @@ abstract class ConfigAdapter
     }
 
     /**
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      *
      * @throws InvalidConfigurationException
      */
-    private function validateFile(\SplFileInfo $file)
+    private function validateFile(SplFileInfo $file)
     {
         if (!$file->isReadable()) {
             throw new InvalidConfigurationException('Configuration file is not readable');

@@ -6,6 +6,7 @@ use Misantron\Silex\Provider\Adapter\JsonConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 
 class JsonConfigAdapterTest extends TestCase
 {
@@ -21,14 +22,14 @@ class JsonConfigAdapterTest extends TestCase
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Unable to parse json file: Syntax error');
 
-        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.json');
+        $file = new SplFileInfo(__DIR__ . '/../../resources/invalid.json');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.json');
+        $file = new SplFileInfo(__DIR__ . '/../../resources/base.json');
 
         $config = $this->adapter->load($file);
 

@@ -4,6 +4,7 @@ namespace Misantron\Silex\Provider\Adapter;
 
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
+use SplFileInfo;
 
 /**
  * Class IniConfigAdapter
@@ -12,12 +13,12 @@ use Misantron\Silex\Provider\Exception\ConfigurationParseException;
 class IniConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @return array
      *
      * @throws ConfigurationParseException
      */
-    protected function parse(\SplFileInfo $file): array
+    protected function parse(SplFileInfo $file): array
     {
         $config = @parse_ini_file($file->getRealPath());
         if ($config === false) {

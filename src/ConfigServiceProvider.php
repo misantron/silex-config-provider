@@ -5,6 +5,7 @@ namespace Misantron\Silex\Provider;
 use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use SplFileInfo;
 
 /**
  * Class ConfigServiceProvider
@@ -78,11 +79,10 @@ class ConfigServiceProvider implements ServiceProviderInterface
      */
     private function createConfigFromPaths(ConfigAdapter $adapter, array $paths): array
     {
-        $files = array_filter($paths, function ($file) {
-            return file_exists($file);
-        });
-        return array_reduce($files, function (array $carry, string $path) use ($adapter) {
-            $file = new \SplFileInfo($path);
+        $files = array_filter($paths, 'file_exists');
+
+        return array_reduce($files, static function (array $carry, string $path) use ($adapter) {
+            $file = new SplFileInfo($path);
             if ($file->isFile()) {
                 $config = $adapter->load($file);
                 $carry = array_replace_recursive($carry, $config);
@@ -125,7 +125,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
     private function doReplacementsInString(string $value): string
     {
         // replace special %env(VAR)% syntax with values from the environment
-        if (preg_match('/%env\(([a-zA-Z0-9_]+)\)%/', $value, $matches)) {
+        if (preg_match('/%env\(([\w]+)\)%/', $value, $matches)) {
             $value = getenv($matches[1]);
         }
 
