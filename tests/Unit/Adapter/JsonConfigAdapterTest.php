@@ -11,12 +11,12 @@ class JsonConfigAdapterTest extends TestCase
 {
     use AdapterTrait;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->adapter = new JsonConfigAdapter();
     }
 
-    public function testLoadInvalidConfigFile()
+    public function testLoadInvalidConfigFile(): void
     {
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Unable to parse json file: Syntax error');
@@ -26,7 +26,7 @@ class JsonConfigAdapterTest extends TestCase
         $this->adapter->load($file);
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $file = new \SplFileInfo(__DIR__ . '/../../resources/base.json');
 

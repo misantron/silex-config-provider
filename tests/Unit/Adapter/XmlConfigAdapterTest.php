@@ -11,12 +11,12 @@ class XmlConfigAdapterTest extends TestCase
 {
     use AdapterTrait;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->adapter = new XmlConfigAdapter();
     }
 
-    public function testLoadInvalidConfigFile()
+    public function testLoadInvalidConfigFile(): void
     {
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Unable to parse config file: xmlParseEntityRef: no name');
@@ -26,7 +26,7 @@ class XmlConfigAdapterTest extends TestCase
         $this->adapter->load($file);
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $file = new \SplFileInfo(__DIR__ . '/../../resources/base.xml');
 

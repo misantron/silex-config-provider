@@ -11,7 +11,7 @@ class ConfigAdapterTest extends TestCase
 {
     use AdapterTrait;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->adapter = new class extends ConfigAdapter
         {
@@ -34,7 +34,7 @@ class ConfigAdapterTest extends TestCase
         };
     }
 
-    public function testLoadNotExistsConfigFile()
+    public function testLoadNotExistsConfigFile(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Configuration file is not readable');
@@ -44,7 +44,7 @@ class ConfigAdapterTest extends TestCase
         $this->adapter->load($file);
     }
 
-    public function testLoadNotReadableConfig()
+    public function testLoadNotReadableConfig(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Configuration file is not readable');
@@ -60,7 +60,7 @@ class ConfigAdapterTest extends TestCase
         $this->adapter->load($file);
     }
 
-    public function testLoadConfigWithInvalidExtension()
+    public function testLoadConfigWithInvalidExtension(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration file type provided');

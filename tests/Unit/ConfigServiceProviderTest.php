@@ -12,7 +12,7 @@ use Silex\Application;
 
 class ConfigServiceProviderTest extends TestCase
 {
-    public function testDefaultConstructor()
+    public function testDefaultConstructor(): void
     {
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
@@ -32,7 +32,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertPropertySame('config', 'key', $provider);
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
@@ -53,7 +53,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertPropertySame('config', 'key', $provider);
     }
 
-    public function testConstructorWithEmptyConfigData()
+    public function testConstructorWithEmptyConfigData(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('No configuration data provided');
@@ -72,7 +72,7 @@ class ConfigServiceProviderTest extends TestCase
         );
     }
 
-    public function testSetConfigContainerKey()
+    public function testSetConfigContainerKey(): void
     {
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
@@ -92,7 +92,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertPropertySame('custom', 'key', $provider);
     }
 
-    public function testRegister()
+    public function testRegister(): void
     {
         $dbOptions = [
             'driver' => 'pdo_mysql',
@@ -135,7 +135,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertSame($twig, $app['config']['twig']);
     }
 
-    public function testRegisterWithEnvironmentVariables()
+    public function testRegisterWithEnvironmentVariables(): void
     {
         $root = realpath(__DIR__ . '/..');
 
@@ -171,7 +171,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->assertSame($root, $app['config']['envvar1']);
     }
 
-    public function testRegisterWithConfigFilesMergeAndReplacements()
+    public function testRegisterWithConfigFilesMergeAndReplacements(): void
     {
         $root = realpath(__DIR__ . '/..');
 

@@ -11,12 +11,12 @@ class YamlConfigAdapterTest extends TestCase
 {
     use AdapterTrait;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->adapter = new YamlConfigAdapter();
     }
 
-    public function testLoadInvalidConfigFile()
+    public function testLoadInvalidConfigFile(): void
     {
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Unable to parse config file: Malformed inline YAML string: {bar} test at line 1 (near "foo: {bar} test").');
@@ -26,7 +26,7 @@ class YamlConfigAdapterTest extends TestCase
         $this->adapter->load($file);
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $file = new \SplFileInfo(__DIR__ . '/../../resources/base.yml');
 
