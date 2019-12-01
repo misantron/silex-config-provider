@@ -2,12 +2,9 @@
 
 namespace Misantron\Silex\Provider\Adapter;
 
-use LibXMLError;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
-use SimpleXMLElement;
-use SplFileInfo;
 
 /**
  * Class XmlConfigAdapter
@@ -16,18 +13,18 @@ use SplFileInfo;
 class XmlConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param SplFileInfo $file
+     * @param \SplFileInfo $file
      * @return array
      *
      * @throws ConfigurationParseException
      */
-    protected function parse(SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
         libxml_use_internal_errors(true);
 
         $xml = simplexml_load_string(file_get_contents($file->getRealPath()));
-        if (!$xml instanceof SimpleXMLElement) {
-            $errors = array_map(static function (LibXMLError $error) {
+        if (!$xml instanceof \SimpleXMLElement) {
+            $errors = array_map(static function (\LibXMLError $error) {
                 return trim($error->message);
             }, libxml_get_errors());
             libxml_clear_errors();

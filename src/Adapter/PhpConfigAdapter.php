@@ -4,7 +4,6 @@ namespace Misantron\Silex\Provider\Adapter;
 
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
-use SplFileInfo;
 
 /**
  * Class PhpConfigAdapter
@@ -13,12 +12,12 @@ use SplFileInfo;
 class PhpConfigAdapter extends ConfigAdapter
 {
     /**
-     * @param SplFileInfo $file
+     * @param \SplFileInfo $file
      * @return array
      *
      * @throws ConfigurationParseException
      */
-    protected function parse(SplFileInfo $file): array
+    protected function parse(\SplFileInfo $file): array
     {
         $config = require $file->getRealPath();
 

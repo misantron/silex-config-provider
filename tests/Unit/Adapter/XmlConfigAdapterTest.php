@@ -4,9 +4,8 @@ namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\XmlConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
+use Misantron\Silex\Provider\Tests\TestCase;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
-use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 
 class XmlConfigAdapterTest extends TestCase
 {
@@ -22,17 +21,17 @@ class XmlConfigAdapterTest extends TestCase
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Unable to parse config file: xmlParseEntityRef: no name');
 
-        $file = new SplFileInfo(__DIR__ . '/../../resources/invalid.xml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.xml');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new SplFileInfo(__DIR__ . '/../../resources/base.xml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.xml');
 
         $config = $this->adapter->load($file);
 
-        $this->assertEquals(['foo' => 'bar'], $config);
+        $this->assertSame(['foo' => 'bar'], $config);
     }
 }

@@ -2,12 +2,10 @@
 
 namespace Misantron\Silex\Provider\Tests\Unit;
 
-use BadMethodCallException;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
+use Misantron\Silex\Provider\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 
 class ConfigAdapterTest extends TestCase
 {
@@ -18,12 +16,12 @@ class ConfigAdapterTest extends TestCase
         $this->adapter = new class extends ConfigAdapter
         {
             /**
-             * @param SplFileInfo $file
+             * @param \SplFileInfo $file
              * @return array
              */
-            protected function parse(SplFileInfo $file): array
+            protected function parse(\SplFileInfo $file): array
             {
-                throw new BadMethodCallException('Forbidden');
+                throw new \BadMethodCallException('Forbidden');
             }
 
             /**
@@ -41,7 +39,7 @@ class ConfigAdapterTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Configuration file is not readable');
 
-        $file = new SplFileInfo(__DIR__ . '/../resources/not_exists.ext');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/not_exists.ext');
 
         $this->adapter->load($file);
     }
@@ -51,10 +49,11 @@ class ConfigAdapterTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Configuration file is not readable');
 
-        /** @var SplFileInfo|MockObject $file */
-        $file = $this->createMock(SplFileInfo::class);
+        /** @var \SplFileInfo|MockObject $file */
+        $file = $this->createMock(\SplFileInfo::class);
 
         $file
+            ->expects($this->once())
             ->method('isReadable')
             ->willReturn(false);
 
@@ -66,7 +65,7 @@ class ConfigAdapterTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration file type provided');
 
-        $file = new SplFileInfo(__DIR__ . '/../resources/invalid.ext');
+        $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.ext');
 
         $this->adapter->load($file);
     }

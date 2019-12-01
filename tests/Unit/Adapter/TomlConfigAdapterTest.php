@@ -4,9 +4,8 @@ namespace Misantron\Silex\Provider\Tests\Unit\Adapter;
 
 use Misantron\Silex\Provider\Adapter\TomlConfigAdapter;
 use Misantron\Silex\Provider\Exception\ConfigurationParseException;
+use Misantron\Silex\Provider\Tests\TestCase;
 use Misantron\Silex\Provider\Tests\Unit\AdapterTrait;
-use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 
 class TomlConfigAdapterTest extends TestCase
 {
@@ -22,17 +21,17 @@ class TomlConfigAdapterTest extends TestCase
         $this->expectException(ConfigurationParseException::class);
         $this->expectExceptionMessage('Unable to parse config file: Syntax error found on TOML document. Missing closing string delimiter.');
 
-        $file = new SplFileInfo(__DIR__ . '/../../resources/invalid.toml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.toml');
 
         $this->adapter->load($file);
     }
 
     public function testLoad()
     {
-        $file = new SplFileInfo(__DIR__ . '/../../resources/base.toml');
+        $file = new \SplFileInfo(__DIR__ . '/../../resources/base.toml');
 
         $config = $this->adapter->load($file);
 
-        $this->assertEquals(['test' => ['foo' => 'bar']], $config);
+        $this->assertSame(['test' => ['foo' => 'bar']], $config);
     }
 }

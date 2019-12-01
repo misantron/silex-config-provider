@@ -6,8 +6,8 @@ use Misantron\Silex\Provider\Adapter\PhpConfigAdapter;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\ConfigServiceProvider;
 use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
+use Misantron\Silex\Provider\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Silex\Application;
 
 class ConfigServiceProviderTest extends TestCase
@@ -17,16 +17,19 @@ class ConfigServiceProviderTest extends TestCase
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
-        $adapter->method('load')->willReturn(['foo' => 'bar']);
+        $adapter
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn(['foo' => 'bar']);
 
         $provider = new ConfigServiceProvider(
             $adapter,
             [__DIR__ . '/../resources/base.php']
         );
 
-        $this->assertAttributeEquals(['foo' => 'bar'], 'config', $provider);
-        $this->assertAttributeEquals([], 'replacements', $provider);
-        $this->assertAttributeEquals('config', 'key', $provider);
+        $this->assertPropertySame(['foo' => 'bar'], 'config', $provider);
+        $this->assertPropertySame([], 'replacements', $provider);
+        $this->assertPropertySame('config', 'key', $provider);
     }
 
     public function testConstructor()
@@ -34,7 +37,10 @@ class ConfigServiceProviderTest extends TestCase
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
-        $adapter->method('load')->willReturn(['foo' => 'bar']);
+        $adapter
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn(['foo' => 'bar']);
 
         $provider = new ConfigServiceProvider(
             $adapter,
@@ -42,9 +48,9 @@ class ConfigServiceProviderTest extends TestCase
             ['root' => __DIR__]
         );
 
-        $this->assertAttributeEquals(['foo' => 'bar'], 'config', $provider);
-        $this->assertAttributeEquals(['%root%' => __DIR__], 'replacements', $provider);
-        $this->assertAttributeEquals('config', 'key', $provider);
+        $this->assertPropertySame(['foo' => 'bar'], 'config', $provider);
+        $this->assertPropertySame(['%root%' => __DIR__], 'replacements', $provider);
+        $this->assertPropertySame('config', 'key', $provider);
     }
 
     public function testConstructorWithEmptyConfigData()
@@ -55,7 +61,10 @@ class ConfigServiceProviderTest extends TestCase
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
-        $adapter->method('load')->willReturn([]);
+        $adapter
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn([]);
 
         new ConfigServiceProvider(
             $adapter,
@@ -68,7 +77,10 @@ class ConfigServiceProviderTest extends TestCase
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
-        $adapter->method('load')->willReturn(['foo' => 'bar']);
+        $adapter
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn(['foo' => 'bar']);
 
         $provider = new ConfigServiceProvider(
             $adapter,
@@ -77,7 +89,7 @@ class ConfigServiceProviderTest extends TestCase
         );
         $provider->setConfigContainerKey('custom');
 
-        $this->assertAttributeEquals('custom', 'key', $provider);
+        $this->assertPropertySame('custom', 'key', $provider);
     }
 
     public function testRegister()
@@ -100,12 +112,15 @@ class ConfigServiceProviderTest extends TestCase
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
-        $adapter->method('load')->willReturn([
-            'debug' => true,
-            'base.path' => __DIR__,
-            'db.options' => $dbOptions,
-            'twig' => $twig
-        ]);
+        $adapter
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn([
+                'debug' => true,
+                'base.path' => __DIR__,
+                'db.options' => $dbOptions,
+                'twig' => $twig
+            ]);
 
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
@@ -113,11 +128,11 @@ class ConfigServiceProviderTest extends TestCase
             [__DIR__ . '/../resources/base.php']
         ));
 
-        $this->assertEquals(true, $app['debug']);
+        $this->assertTrue($app['debug']);
         $this->assertArrayHasKey('config', $app);
-        $this->assertEquals($dbOptions, $app['config']['db.options']);
-        $this->assertEquals(__DIR__, $app['config']['base.path']);
-        $this->assertEquals($twig, $app['config']['twig']);
+        $this->assertSame($dbOptions, $app['config']['db.options']);
+        $this->assertSame(__DIR__, $app['config']['base.path']);
+        $this->assertSame($twig, $app['config']['twig']);
     }
 
     public function testRegisterWithEnvironmentVariables()
@@ -127,12 +142,15 @@ class ConfigServiceProviderTest extends TestCase
         /** @var ConfigAdapter|MockObject $adapter */
         $adapter = $this->createMock(ConfigAdapter::class);
 
-        $adapter->method('load')->willReturn([
-            'env.var' => '%env(ENV_VAR)%',
-            'env.var.1' => '%env(ENV_VAR_1)%',
-            'envvar' => '%env(ENVVAR)%',
-            'envvar1' => '%env(ENVVAR1)%',
-        ]);
+        $adapter
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn([
+                'env.var' => '%env(ENV_VAR)%',
+                'env.var.1' => '%env(ENV_VAR_1)%',
+                'envvar' => '%env(ENVVAR)%',
+                'envvar1' => '%env(ENVVAR1)%',
+            ]);
 
         putenv('ENV_VAR=foo');
         putenv('ENV_VAR_1=bar');
@@ -147,10 +165,10 @@ class ConfigServiceProviderTest extends TestCase
         ));
 
         $this->assertArrayHasKey('config', $app);
-        $this->assertEquals('foo', $app['config']['env.var']);
-        $this->assertEquals('bar', $app['config']['env.var.1']);
-        $this->assertEquals('baz', $app['config']['envvar']);
-        $this->assertEquals($root, $app['config']['envvar1']);
+        $this->assertSame('foo', $app['config']['env.var']);
+        $this->assertSame('bar', $app['config']['env.var.1']);
+        $this->assertSame('baz', $app['config']['envvar']);
+        $this->assertSame($root, $app['config']['envvar1']);
     }
 
     public function testRegisterWithConfigFilesMergeAndReplacements()
@@ -169,12 +187,12 @@ class ConfigServiceProviderTest extends TestCase
             ]
         ));
 
-        $this->assertEquals(true, $app['debug']);
+        $this->assertTrue($app['debug']);
         $this->assertArrayHasKey('config', $app);
 
-        $this->assertEquals('Europe/London', $app['config']['date.timezone']);
+        $this->assertSame('Europe/London', $app['config']['date.timezone']);
 
-        $this->assertEquals([
+        $this->assertSame([
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
             'user' => 'app',
@@ -182,7 +200,7 @@ class ConfigServiceProviderTest extends TestCase
             'db_name' => 'db_app'
         ], $app['config']['db.options']);
 
-        $this->assertEquals([
+        $this->assertSame([
             'monolog.logfile' => $root . '/logs/app.log',
             'monolog.name' => 'app'
         ], $app['config']['logger']);

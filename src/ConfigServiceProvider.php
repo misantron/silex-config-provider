@@ -5,7 +5,6 @@ namespace Misantron\Silex\Provider;
 use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use SplFileInfo;
 
 /**
  * Class ConfigServiceProvider
@@ -82,7 +81,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $files = array_filter($paths, 'file_exists');
 
         return array_reduce($files, static function (array $carry, string $path) use ($adapter) {
-            $file = new SplFileInfo($path);
+            $file = new \SplFileInfo($path);
             if ($file->isFile()) {
                 $config = $adapter->load($file);
                 $carry = array_replace_recursive($carry, $config);
