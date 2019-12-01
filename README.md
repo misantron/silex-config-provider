@@ -1,10 +1,9 @@
 # Config service provider
 
-[![Build Status](http://img.shields.io/travis/misantron/silex-config-provider.svg?style=flat-square)](https://travis-ci.org/misantron/silex-config-provider)
+[![Build Status](http://img.shields.io/travis/com/misantron/silex-config-provider.svg?style=flat-square)](https://travis-ci.com/misantron/silex-config-provider)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/misantron/silex-config-provider.svg?style=flat-square)](https://scrutinizer-ci.com/g/misantron/silex-config-provider)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/misantron/silex-config-provider.svg?style=flat-square)](https://scrutinizer-ci.com/g/misantron/silex-config-provider)
 [![Packagist](https://img.shields.io/packagist/v/misantron/silex-config-provider.svg?style=flat-square)](https://packagist.org/packages/misantron/silex-config-provider)
-[![PHP 7 Support](https://img.shields.io/badge/PHP%207-supported-blue.svg?style=flat-square)](https://travis-ci.org/misantron/silex-basic-app)
 
 Config service provider for [Silex](http://silex.sensiolabs.org) framework with support for php, json, ini, xml, toml and yaml
 
