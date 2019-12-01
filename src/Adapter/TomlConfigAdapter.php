@@ -29,7 +29,7 @@ class TomlConfigAdapter extends ConfigAdapter
             throw new ConfigurationParseException('Unable to parse config file: ' . $e->getMessage());
         }
 
-        return $config;
+        return json_decode(json_encode($config), true);
     }
 
     /**
