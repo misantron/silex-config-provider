@@ -13,7 +13,6 @@
   ],
   "require": {
     "php": "^7.1",
-    "ext-json": "*",
     "ext-libxml": "*",
     "ext-simplexml": "*",
     "silex/silex": "^2.0"
