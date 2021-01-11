@@ -5,7 +5,6 @@ namespace Misantron\Silex\Provider\Tests\Unit;
 use Misantron\Silex\Provider\ConfigAdapter;
 use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
 use Misantron\Silex\Provider\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class ConfigAdapterTest extends TestCase
 {
@@ -49,11 +48,9 @@ class ConfigAdapterTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Configuration file is not readable');
 
-        /** @var \SplFileInfo|MockObject $file */
         $file = $this->createMock(\SplFileInfo::class);
-
         $file
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('isReadable')
             ->willReturn(false);
 

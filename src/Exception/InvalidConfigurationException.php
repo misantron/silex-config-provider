@@ -8,5 +8,4 @@ namespace Misantron\Silex\Provider\Exception;
  */
 class InvalidConfigurationException extends \RuntimeException
 {
-
 }

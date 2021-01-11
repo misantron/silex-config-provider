@@ -19,7 +19,9 @@ class YamlConfigAdapterTest extends TestCase
     public function testLoadInvalidConfigFile(): void
     {
         $this->expectException(ConfigurationParseException::class);
-        $this->expectExceptionMessage('Unable to parse config file: Malformed inline YAML string: {bar} test at line 1 (near "foo: {bar} test").');
+        $this->expectExceptionMessage(
+            'Unable to parse config file: Malformed inline YAML string: "{bar}" at line 1 (near "foo: {bar} test").'
+        );
 
         $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.yml');
 
@@ -32,6 +34,6 @@ class YamlConfigAdapterTest extends TestCase
 
         $config = $this->adapter->load($file);
 
-        $this->assertSame(['foo' => 'bar'], $config);
+        self::assertSame(['foo' => 'bar'], $config);
     }
 }
