@@ -1,0 +1,52 @@
+name: build
+
+on: [push]
+
+jobs:
+  code-style:
+    name: Code style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: composer install --no-scripts
+      - name: PHP Code Style run
+        run: vendor/bin/phpcs --standard=phpcs.xml
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: PHP version setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Install dependencies
+        run: composer install --no-scripts
+      - name: PHPUnit run
+        run: vendor/bin/phpunit --colors=always
+  coverage:
+    name: Tests coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: pcov
+      - name: Install dependencies
+        run: composer install --no-scripts
+      - name: PHPUnit run with coverage
+        run: vendor/bin/phpunit --testsuite=Unit --colors=always --coverage-clover=coverage.clover
+      - name: Upload coverage report
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
