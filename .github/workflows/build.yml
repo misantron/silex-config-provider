@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: composer install --no-scripts
       - name: PHPUnit run with coverage
-        run: vendor/bin/phpunit --testsuite=Unit --colors=always --coverage-clover=coverage.clover
+        run: vendor/bin/phpunit --testsuite=unit --colors=always --coverage-clover=coverage.clover
       - name: Upload coverage report
         run: |
           wget https://scrutinizer-ci.com/ocular.phar
