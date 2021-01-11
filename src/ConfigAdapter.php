@@ -40,7 +40,7 @@ abstract class ConfigAdapter
     /**
      * @throws ComponentNotInstalledException
      */
-    protected function assertComponentInstalled()
+    protected function assertComponentInstalled(): void
     {
     }
 
@@ -49,7 +49,7 @@ abstract class ConfigAdapter
      *
      * @throws InvalidConfigurationException
      */
-    private function validateFile(\SplFileInfo $file)
+    private function validateFile(\SplFileInfo $file): void
     {
         if (!$file->isReadable()) {
             throw new InvalidConfigurationException('Configuration file is not readable');

@@ -42,7 +42,7 @@ class YamlConfigAdapter extends ConfigAdapter
     /**
      * @throws ComponentNotInstalledException
      */
-    protected function assertComponentInstalled()
+    protected function assertComponentInstalled(): void
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('Symfony\\Component\\Yaml\\Yaml')) {

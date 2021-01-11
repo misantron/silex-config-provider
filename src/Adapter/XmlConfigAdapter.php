@@ -47,7 +47,7 @@ class XmlConfigAdapter extends ConfigAdapter
     /**
      * @throws ComponentNotInstalledException
      */
-    protected function assertComponentInstalled()
+    protected function assertComponentInstalled(): void
     {
         // @codeCoverageIgnoreStart
         if (!class_exists('SimpleXMLElement')) {
