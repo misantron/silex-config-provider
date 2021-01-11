@@ -19,7 +19,9 @@ class TomlConfigAdapterTest extends TestCase
     public function testLoadInvalidConfigFile(): void
     {
         $this->expectException(ConfigurationParseException::class);
-        $this->expectExceptionMessage('Unable to parse config file: Syntax error found on TOML document. Missing closing string delimiter.');
+        $this->expectExceptionMessage(
+            'Unable to parse config file: Syntax error found on TOML document. Missing closing string delimiter.'
+        );
 
         $file = new \SplFileInfo(__DIR__ . '/../../resources/invalid.toml');
 
