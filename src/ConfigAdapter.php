@@ -42,7 +42,6 @@ abstract class ConfigAdapter
      */
     protected function assertComponentInstalled()
     {
-
     }
 
     /**
@@ -55,8 +54,9 @@ abstract class ConfigAdapter
         if (!$file->isReadable()) {
             throw new InvalidConfigurationException('Configuration file is not readable');
         }
+
         $validExtensions = $this->configFileExtensions();
-        if (!in_array($file->getExtension(), $validExtensions, true)) {
+        if (!\in_array($file->getExtension(), $validExtensions, true)) {
             throw new InvalidConfigurationException('Invalid configuration file type provided');
         }
     }

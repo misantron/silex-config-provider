@@ -48,27 +48,24 @@ class ConfigServiceProvider implements ServiceProviderInterface
     /**
      * @param string $key
      */
-    public function setConfigContainerKey(string $key)
+    public function setConfigContainerKey(string $key): void
     {
         $this->key = $key;
     }
 
-    /**
-     * @param Container $app
-     */
-    public function register(Container $app)
+    public function register(Container $pimple): void
     {
-        if (!isset($app[$this->key])) {
-            $app[$this->key] = new Container();
+        if (!isset($pimple[$this->key])) {
+            $pimple[$this->key] = new Container();
         }
 
         // exceptional handler for application debug flag
         if (isset($this->config['debug'])) {
-            $app['debug'] = $this->config['debug'];
+            $pimple['debug'] = $this->config['debug'];
             unset($this->config['debug']);
         }
 
-        $this->doConfigReplacements($app);
+        $this->doConfigReplacements($pimple);
     }
 
     /**
@@ -93,7 +90,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
     /**
      * @param array $replacements
      */
-    private function createReplacements(array $replacements)
+    private function createReplacements(array $replacements): void
     {
         $this->replacements = [];
         foreach ($replacements as $placeholder => $value) {
@@ -104,7 +101,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
     /**
      * @param Container $app
      */
-    private function doConfigReplacements(Container $app)
+    private function doConfigReplacements(Container $app): void
     {
         foreach ($this->config as $name => $value) {
             if (is_array($value)) {
@@ -125,7 +122,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
     {
         // replace special %env(VAR)% syntax with values from the environment
         if (preg_match('/%env\(([\w]+)\)%/', $value, $matches)) {
-            $value = getenv($matches[1]);
+            $value = (string) getenv($matches[1] ?? '');
         }
 
         return strtr($value, $this->replacements);
@@ -138,9 +135,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
     private function doReplacementsInArray(array $value): array
     {
         foreach ($value as $k => $v) {
-            if (is_array($v)) {
+            if (\is_array($v)) {
                 $value[$k] = $this->doReplacementsInArray($v);
-            } elseif (is_string($v)) {
+            } elseif (\is_string($v)) {
                 $value[$k] = $this->doReplacementsInString($v);
             }
         }

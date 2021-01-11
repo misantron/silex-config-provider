@@ -32,6 +32,6 @@ class TomlConfigAdapterTest extends TestCase
 
         $config = $this->adapter->load($file);
 
-        $this->assertSame(['test' => ['foo' => 'bar']], $config);
+        self::assertSame(['test' => ['foo' => 'bar']], $config);
     }
 }

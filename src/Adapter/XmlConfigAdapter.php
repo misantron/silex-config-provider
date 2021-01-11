@@ -27,6 +27,7 @@ class XmlConfigAdapter extends ConfigAdapter
             $errors = array_map(static function (\LibXMLError $error) {
                 return trim($error->message);
             }, libxml_get_errors());
+
             libxml_clear_errors();
 
             throw new ConfigurationParseException('Unable to parse config file: ' . implode(', ', $errors));
