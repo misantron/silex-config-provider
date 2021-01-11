@@ -1,5 +1,6 @@
 # Config service provider
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d0da1b65e553458ab7cea3758e9fd346)](https://app.codacy.com/gh/misantron/silex-config-provider?utm_source=github.com&utm_medium=referral&utm_content=misantron/silex-config-provider&utm_campaign=Badge_Grade)
 [![Build Status](http://img.shields.io/travis/com/misantron/silex-config-provider.svg?style=flat-square)](https://travis-ci.com/misantron/silex-config-provider)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/misantron/silex-config-provider.svg?style=flat-square)](https://scrutinizer-ci.com/g/misantron/silex-config-provider)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/misantron/silex-config-provider.svg?style=flat-square)](https://scrutinizer-ci.com/g/misantron/silex-config-provider)
