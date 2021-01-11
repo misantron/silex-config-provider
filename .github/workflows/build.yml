@@ -45,8 +45,9 @@ jobs:
       - name: Install dependencies
         run: composer install --no-scripts
       - name: PHPUnit run with coverage
-        run: vendor/bin/phpunit --testsuite=unit --colors=always --coverage-clover=coverage.clover
+        run: vendor/bin/phpunit --colors=always --coverage-clover=clover.xml
       - name: Upload coverage report
-        run: |
-          wget https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+        uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project_token: ${{ secrets.CODACY_TOKEN }}
+          coverage-reports: clover.xml
