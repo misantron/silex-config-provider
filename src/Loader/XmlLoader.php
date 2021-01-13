@@ -16,8 +16,14 @@ class XmlLoader extends AbstractLoader
     protected function parse(): array
     {
         // @codeCoverageIgnoreStart
-        assert(extension_loaded('libxml'));
-        assert(extension_loaded('simplexml'));
+        assert(
+            extension_loaded('libxml'),
+            'libxml extension is not installed'
+        );
+        assert(
+            extension_loaded('simplexml'),
+            'simplexml extension is not installed'
+        );
         // @codeCoverageIgnoreEnd
 
         libxml_use_internal_errors(true);
