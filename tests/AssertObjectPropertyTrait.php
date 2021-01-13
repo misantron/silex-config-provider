@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Misantron\Silex\Provider\Tests;
 
 /**
@@ -16,11 +18,6 @@ trait AssertObjectPropertyTrait
     public function assertPropertyInstanceOf(string $expected, string $attributeName, $actual): void
     {
         static::assertInstanceOf($expected, $this->getObjectPropertyValue($actual, $attributeName));
-    }
-
-    public function assertPropertyNull(string $attributeName, $actual): void
-    {
-        static::assertNull($this->getObjectPropertyValue($actual, $attributeName));
     }
 
     private function getObjectPropertyValue($obj, string $name)
