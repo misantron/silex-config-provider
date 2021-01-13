@@ -36,6 +36,8 @@ final class DefaultLoaderFactory implements LoaderFactoryInterface
                 return new Loader\JsonLoader($file);
             case 'php':
                 return new Loader\PhpLoader($file);
+            case 'toml':
+                return new Loader\TomlLoader($file);
             case 'xml':
                 return new Loader\XmlLoader($file);
             case 'yml':

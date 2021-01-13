@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Misantron\Silex\Provider;
 
-use Misantron\Silex\Provider\Exception\ComponentNotInstalledException;
 use Misantron\Silex\Provider\Exception\ConfigParsingException;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
 
@@ -25,14 +24,14 @@ abstract class AbstractLoader implements LoaderInterface
      * @return array
      *
      * @throws ConfigParsingException
-     * @throws ComponentNotInstalledException
+     * @throws \AssertionError
      */
     abstract protected function parse(): array;
 
     public function load(): array
     {
         if (!\in_array($this->file->getExtension(), $this->getSupportedExtensions(), true)) {
-            throw InvalidConfigException::unsupportedFileType();
+            throw InvalidConfigException::unsupportedFileType($this->file->getExtension());
         }
 
         return $this->parse();

@@ -6,18 +6,23 @@ namespace Misantron\Silex\Provider\Tests;
 
 use Misantron\Silex\Provider\DefaultLoaderFactory;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
-use Misantron\Silex\Provider\Loader\JsonLoader;
+use Misantron\Silex\Provider\Loader;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
 class DefaultLoaderFactoryTest extends TestCase
 {
-    private vfsStreamDirectory $root;
+    private static ?vfsStreamDirectory $root;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        $this->root = vfsStream::setup();
+        self::$root = vfsStream::setup();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::$root = null;
     }
 
     public function testCreateWithNotExistConfigFile(): void
@@ -26,7 +31,7 @@ class DefaultLoaderFactoryTest extends TestCase
         $this->expectExceptionMessage('Config file is not a file');
 
         $factory = new DefaultLoaderFactory();
-        $factory->create($this->root->url() . '/not.exist');
+        $factory->create(self::$root->url() . '/not.exist');
     }
 
     public function testCreateWithNotReadableConfigFile(): void
@@ -35,10 +40,10 @@ class DefaultLoaderFactoryTest extends TestCase
         $this->expectExceptionMessage('Config file is not readable');
 
         // create write-only file
-        vfsStream::newFile('config.xml', 0222)->at($this->root);
+        vfsStream::newFile('config.xml', 0222)->at(self::$root);
 
         $factory = new DefaultLoaderFactory();
-        $factory->create($this->root->url() . '/config.xml');
+        $factory->create(self::$root->url() . '/config.xml');
     }
 
     public function testCreateWithUnsupportedConfigFile(): void
@@ -46,22 +51,56 @@ class DefaultLoaderFactoryTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Unsupported config file type provided: txt');
 
-        vfsStream::newFile('config.txt')->at($this->root);
+        vfsStream::newFile('config.txt')->at(self::$root);
 
         $factory = new DefaultLoaderFactory();
-        $factory->create($this->root->url() . '/config.txt');
+        $factory->create(self::$root->url() . '/config.txt');
     }
 
-    public function testCreate(): void
+    /**
+     * @dataProvider createLoaderDataProvider
+     */
+    public function testCreate(string $file, string $class): void
     {
-        vfsStream::newFile('config.json')
-            ->setContent('{"foo":"bar"}')
-            ->at($this->root)
-        ;
+        vfsStream::newFile($file)->at(self::$root);
 
         $factory = new DefaultLoaderFactory();
-        $loader = $factory->create($this->root->url() . '/config.json');
+        $loader = $factory->create(self::$root->url() . '/' . $file);
 
-        self::assertInstanceOf(JsonLoader::class, $loader);
+        self::assertSame($class, get_class($loader));
+    }
+
+    public function createLoaderDataProvider(): array
+    {
+        return [
+            'ini' => [
+                'config.ini',
+                Loader\IniLoader::class,
+            ],
+            'json' => [
+                'config.json',
+                Loader\JsonLoader::class,
+            ],
+            'php' => [
+                'config.php',
+                Loader\PhpLoader::class,
+            ],
+            'toml' => [
+                'config.toml',
+                Loader\TomlLoader::class,
+            ],
+            'xml' => [
+                'config.xml',
+                Loader\XmlLoader::class,
+            ],
+            'yaml' => [
+                'config.yaml',
+                Loader\YamlLoader::class,
+            ],
+            'yml' => [
+                'config.yml',
+                Loader\YamlLoader::class,
+            ],
+        ];
     }
 }
