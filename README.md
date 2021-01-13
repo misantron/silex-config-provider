@@ -11,11 +11,11 @@ Silex framework is DEPRECATED. Use [symfony/flex](https://github.com/symfony/fle
 
 ## Features
 
-- Support different formats of config files: php, json, ini, xml (require [libxml](https://www.php.net/manual/en/book.libxml.php) and [simplexml](https://www.php.net/manual/en/book.simplexml.php) extensions), toml (require [yosymfony/toml](https://github.com/yosymfony/toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
-- Multiple config file processing
-- Ability to use mixed types of configs inside provider
-- On load placeholder replacements
-- Using environment variables for replacement
+-  Support different formats of config files: php, json, ini, xml (require [libxml](https://www.php.net/manual/en/book.libxml.php) and [simplexml](https://www.php.net/manual/en/book.simplexml.php) extensions), toml (require [yosymfony/toml](https://github.com/yosymfony/toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
+-  Multiple config file processing
+-  Ability to use mixed types of configs inside provider
+-  On load placeholder replacements
+-  Using environment variables for replacement
 
 ## Installation
 
