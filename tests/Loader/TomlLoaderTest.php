@@ -16,6 +16,8 @@ class TomlLoaderTest extends TestCase
         $data = InstalledVersions::getRawData();
         InstalledVersions::reload([]);
 
+        var_dump(InstalledVersions::getRootPackage());
+
         $file = new \SplFileInfo(__DIR__ . '/../resources/base.toml');
 
         try {
