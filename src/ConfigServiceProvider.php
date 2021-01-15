@@ -61,12 +61,15 @@ class ConfigServiceProvider implements ServiceProviderInterface
     private function doConfigReplacements(Container $app, array $config): void
     {
         foreach ($config as $name => $value) {
-            if (\is_array($value)) {
-                $app[$name] = $this->doReplacementsInArray($value);
-            } elseif (\is_string($value)) {
-                $app[$name] = $this->doReplacementsInString($value);
-            } else {
-                $app[$name] = $value;
+            switch (gettype($value)) {
+                case 'array':
+                    $app[$name] = $this->doReplacementsInArray($value);
+                    break;
+                case 'string':
+                    $app[$name] = $this->doReplacementsInString($value);
+                    break;
+                default:
+                    $app[$name] = $value;
             }
         }
     }
