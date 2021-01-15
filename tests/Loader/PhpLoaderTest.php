@@ -20,7 +20,16 @@ class PhpLoaderTest extends TestCase
         (new PhpLoader($file))->load();
     }
 
-    public function testLoad(): void
+    public function testLoadWithIterableObject(): void
+    {
+        $file = new \SplFileInfo(__DIR__ . '/../resources/iterable.php');
+
+        $config = (new PhpLoader($file))->load();
+
+        self::assertSame(['foo' => 'bar'], $config);
+    }
+
+    public function testLoadWithArray(): void
     {
         $file = new \SplFileInfo(__DIR__ . '/../resources/base.php');
 
