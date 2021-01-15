@@ -7,23 +7,11 @@ namespace Misantron\Silex\Provider\Tests;
 use Misantron\Silex\Provider\DefaultLoaderFactory;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
 use Misantron\Silex\Provider\Loader;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
 class DefaultLoaderFactoryTest extends TestCase
 {
-    private static ?vfsStreamDirectory $root;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$root = vfsStream::setup();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$root = null;
-    }
+    use FakeFileSystemTrait;
 
     public function testCreateWithNotExistConfigFile(): void
     {
@@ -31,7 +19,7 @@ class DefaultLoaderFactoryTest extends TestCase
         $this->expectExceptionMessage('Config file is not a file');
 
         $factory = new DefaultLoaderFactory();
-        $factory->create(self::$root->url() . '/not.exist');
+        $factory->create($this->getFilePath('not.exist'));
     }
 
     public function testCreateWithNotReadableConfigFile(): void
@@ -40,10 +28,10 @@ class DefaultLoaderFactoryTest extends TestCase
         $this->expectExceptionMessage('Config file is not readable');
 
         // create write-only file
-        vfsStream::newFile('config.xml', 0222)->at(self::$root);
+        $this->createFile('config.xml', 0222);
 
         $factory = new DefaultLoaderFactory();
-        $factory->create(self::$root->url() . '/config.xml');
+        $factory->create($this->getFilePath('config.xml'));
     }
 
     public function testCreateWithUnsupportedConfigFile(): void
@@ -51,10 +39,10 @@ class DefaultLoaderFactoryTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Unsupported config file type provided: txt');
 
-        vfsStream::newFile('config.txt')->at(self::$root);
+        $this->createFile('config.txt');
 
         $factory = new DefaultLoaderFactory();
-        $factory->create(self::$root->url() . '/config.txt');
+        $factory->create($this->getFilePath('config.txt'));
     }
 
     /**
@@ -62,10 +50,10 @@ class DefaultLoaderFactoryTest extends TestCase
      */
     public function testCreate(string $file, string $class): void
     {
-        vfsStream::newFile($file)->at(self::$root);
+        $this->createFile($file);
 
         $factory = new DefaultLoaderFactory();
-        $loader = $factory->create(self::$root->url() . '/' . $file);
+        $loader = $factory->create($this->getfilePath($file));
 
         self::assertSame($class, get_class($loader));
     }

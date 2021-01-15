@@ -39,7 +39,13 @@ abstract class AbstractLoader implements LoaderInterface
 
     protected function getFilePath(): string
     {
-        return $this->file->getRealPath();
+        $path = $this->file->getRealPath();
+        assert(
+            \is_string($path),
+            'File path is invalid'
+        );
+
+        return $path;
     }
 
     protected function getFileContents(): string
@@ -47,7 +53,10 @@ abstract class AbstractLoader implements LoaderInterface
         $file = $this->file->openFile();
 
         $contents = $file->fread($file->getSize());
-        assert(\is_string($contents));
+        assert(
+            \is_string($contents),
+            'File content reading error'
+        );
 
         return $contents;
     }

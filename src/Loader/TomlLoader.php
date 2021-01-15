@@ -19,10 +19,12 @@ class TomlLoader extends AbstractLoader
 {
     protected function parse(): array
     {
+        // @codeCoverageIgnoreStart
         assert(
             InstalledVersions::isInstalled('yosymfony/toml'),
             'Toml parser library is not installed'
         );
+        // @codeCoverageIgnoreEnd
 
         try {
             $parser = new Parser(new Lexer());

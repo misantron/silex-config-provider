@@ -18,10 +18,12 @@ class YamlLoader extends AbstractLoader
 {
     protected function parse(): array
     {
+        // @codeCoverageIgnoreStart
         assert(
             InstalledVersions::isInstalled('symfony/yaml'),
             'Yaml parser library is not installed'
         );
+        // @codeCoverageIgnoreEnd
 
         try {
             $parser = new Parser();

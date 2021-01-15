@@ -7,8 +7,6 @@ namespace Misantron\Silex\Provider\Tests;
 use Misantron\Silex\Provider\ConfigServiceProvider;
 use Misantron\Silex\Provider\DefaultLoaderFactory;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Silex\Application;
@@ -16,62 +14,32 @@ use Silex\Application;
 class ConfigServiceProviderTest extends TestCase
 {
     use AssertObjectPropertyTrait;
-
-    private static ?vfsStreamDirectory $root;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$root = vfsStream::setup('root', null, [
-            'base.json' => '{"foo":"bar"}',
-            'empty.json' => '{}',
-            'extended.json' => json_encode([
-                'debug' => true,
-                'db.options' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'user' => 'root',
-                    'password' => '',
-                    'db_name' => 'db_test',
-                ],
-                'twig.options' => [
-                    'debug' => true,
-                    'auto_reload' => true,
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
-            'env.json' => json_encode([
-                'env.var' => '%env(ENV_VAR)%',
-                'env.var.1' => '%env(ENV_VAR_1)%',
-                'envvar' => '%env(ENVVAR)%',
-                'envvar1' => '%env(ENVVAR1)%',
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
-        ]);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$root = null;
-    }
+    use FakeFileSystemTrait;
 
     public function testDefaultConstructor(): void
     {
+        $this->createFile('default.json', null, '{"foo":"bar"}');
+
         $provider = new ConfigServiceProvider(
-            [self::$root->url() . '/base.json']
+            [$this->getFilePath('default.json')]
         );
 
         $this->assertPropertyInstanceOf(DefaultLoaderFactory::class, 'loaderFactory', $provider);
-        $this->assertPropertySame([self::$root->url() . '/base.json'], 'paths', $provider);
+        $this->assertPropertySame([$this->getFilePath('default.json')], 'paths', $provider);
         $this->assertPropertySame([], 'replacements', $provider);
     }
 
     public function testConstructor(): void
     {
+        $this->createFile('base.json', null, '{"foo":"bar"}');
+
         $provider = new ConfigServiceProvider(
-            [self::$root->url() . '/base.json'],
-            ['app.root' => __DIR__]
+            [$this->getFilePath('base.json')],
+            ['APP_ROOT' => __DIR__]
         );
 
-        $this->assertPropertySame([self::$root->url() . '/base.json'], 'paths', $provider);
-        $this->assertPropertySame(['%app.root%' => __DIR__], 'replacements', $provider);
+        $this->assertPropertySame([$this->getFilePath('base.json')], 'paths', $provider);
+        $this->assertPropertySame(['%APP_ROOT%' => __DIR__], 'replacements', $provider);
     }
 
     public function testRegisterWithEmptyConfigData(): void
@@ -79,17 +47,34 @@ class ConfigServiceProviderTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('No configuration data provided');
 
+        $this->createFile('empty.json', null, '{}');
+
         $provider = new ConfigServiceProvider(
-            [self::$root->url() . '/empty.json']
+            [$this->getFilePath('empty.json')]
         );
         $provider->register(new Container());
     }
 
     public function testRegister(): void
     {
+        $this->createFile('extended.json', null, json_encode([
+            'debug' => true,
+            'db.options' => [
+                'driver' => 'pdo_mysql',
+                'host' => 'localhost',
+                'user' => 'root',
+                'password' => '',
+                'db_name' => 'db_test',
+            ],
+            'twig.options' => [
+                'debug' => true,
+                'auto_reload' => true,
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
-            [self::$root->url() . '/extended.json']
+            [$this->getFilePath('extended.json')]
         ));
 
         self::assertTrue($app['debug']);
@@ -115,9 +100,16 @@ class ConfigServiceProviderTest extends TestCase
         putenv('ENVVAR=baz');
         putenv('ENVVAR1=%ROOT_PATH%');
 
+        $this->createFile('env.json', null, json_encode([
+            'env.var' => '%env(ENV_VAR)%',
+            'env.var.1' => '%env(ENV_VAR_1)%',
+            'envvar' => '%env(ENVVAR)%',
+            'envvar1' => '%env(ENVVAR1)%',
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+
         $app = new Application();
         $app->register(new ConfigServiceProvider(
-            [self::$root->url() . '/env.json'],
+            [$this->getFilePath('env.json')],
             ['ROOT_PATH' => $root]
         ));
 
@@ -131,11 +123,33 @@ class ConfigServiceProviderTest extends TestCase
     {
         $root = realpath(__DIR__ . '/..');
 
+        $this->createFile('common.json', null, json_encode([
+            'debug' => true,
+            'date.timezone' => 'Europe/London',
+            'db.options' => [
+                'driver' => 'pdo_mysql',
+                'host' => 'localhost',
+                'user' => 'root',
+                'password' => '',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+        $this->createFile('app.json', null, json_encode([
+            'db.options' => [
+                'db_name' => 'db_app',
+                'user' => 'app',
+                'password' => 'root',
+            ],
+            'logger' => [
+                'monolog.logfile' => '%ROOT_PATH%/logs/app.log',
+                'monolog.name' => 'app'
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+
         $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
             [
-                __DIR__ . '/resources/common.php',
-                __DIR__ . '/resources/app.php',
+                $this->getFilePath('common.json'),
+                $this->getFilePath('app.json'),
             ],
             [
                 'ROOT_PATH' => $root,
