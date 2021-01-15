@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Misantron\Silex\Provider;
 
-use Misantron\Silex\Provider\Exception\InvalidConfigurationException;
+use Misantron\Silex\Provider\Exception\InvalidConfigException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -12,84 +14,42 @@ use Pimple\ServiceProviderInterface;
  */
 class ConfigServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * @var array
-     */
-    private $config;
+    private LoaderFactoryInterface $loaderFactory;
 
-    /**
-     * @var array
-     */
-    private $replacements;
+    private array $paths;
+    private array $replacements;
 
-    /**
-     * @var string
-     */
-    private $key = 'config';
-
-    /**
-     * @param ConfigAdapter $adapter
-     * @param array $paths
-     * @param array $replacements
-     *
-     * @throws InvalidConfigurationException
-     */
-    public function __construct(ConfigAdapter $adapter, array $paths, array $replacements = [])
+    public function __construct(array $paths, array $replacements = [], LoaderFactoryInterface $loaderFactory = null)
     {
-        $this->config = $this->createConfigFromPaths($adapter, $paths);
-
-        if (empty($this->config)) {
-            throw new InvalidConfigurationException('No configuration data provided');
-        }
+        $this->loaderFactory = $loaderFactory ?? new DefaultLoaderFactory();
+        $this->paths = $paths;
 
         $this->createReplacements($replacements);
     }
 
-    /**
-     * @param string $key
-     */
-    public function setConfigContainerKey(string $key): void
+    public function register(Container $app): void
     {
-        $this->key = $key;
+        $config = $this->loadConfigFromPaths();
+
+        $this->doConfigReplacements($app, $config);
     }
 
-    public function register(Container $pimple): void
+    private function loadConfigFromPaths(): array
     {
-        if (!isset($pimple[$this->key])) {
-            $pimple[$this->key] = new Container();
-        }
+        $config = array_reduce($this->paths, function (array $carry, string $path) {
+            $loader = $this->loaderFactory->create($path);
+            $carry = array_replace_recursive($carry, $loader->load());
 
-        // exceptional handler for application debug flag
-        if (isset($this->config['debug'])) {
-            $pimple['debug'] = $this->config['debug'];
-            unset($this->config['debug']);
-        }
-
-        $this->doConfigReplacements($pimple);
-    }
-
-    /**
-     * @param ConfigAdapter $adapter
-     * @param array $paths
-     * @return array
-     */
-    private function createConfigFromPaths(ConfigAdapter $adapter, array $paths): array
-    {
-        $files = array_filter($paths, 'file_exists');
-
-        return array_reduce($files, static function (array $carry, string $path) use ($adapter) {
-            $file = new \SplFileInfo($path);
-            if ($file->isFile()) {
-                $config = $adapter->load($file);
-                $carry = array_replace_recursive($carry, $config);
-            }
             return $carry;
         }, []);
+
+        if (\count($config) === 0) {
+            throw InvalidConfigException::emptyData();
+        }
+
+        return $config;
     }
 
-    /**
-     * @param array $replacements
-     */
     private function createReplacements(array $replacements): void
     {
         $this->replacements = [];
@@ -98,26 +58,19 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }
     }
 
-    /**
-     * @param Container $app
-     */
-    private function doConfigReplacements(Container $app): void
+    private function doConfigReplacements(Container $app, array $config): void
     {
-        foreach ($this->config as $name => $value) {
-            if (is_array($value)) {
-                $app[$this->key][$name] = $this->doReplacementsInArray($value);
-            } elseif (is_string($value)) {
-                $app[$this->key][$name] = $this->doReplacementsInString($value);
+        foreach ($config as $name => $value) {
+            if (\is_array($value)) {
+                $app[$name] = $this->doReplacementsInArray($value);
+            } elseif (\is_string($value)) {
+                $app[$name] = $this->doReplacementsInString($value);
             } else {
-                $app[$this->key][$name] = $value;
+                $app[$name] = $value;
             }
         }
     }
 
-    /**
-     * @param string $value
-     * @return string
-     */
     private function doReplacementsInString(string $value): string
     {
         // replace special %env(VAR)% syntax with values from the environment
@@ -128,10 +81,6 @@ class ConfigServiceProvider implements ServiceProviderInterface
         return strtr($value, $this->replacements);
     }
 
-    /**
-     * @param array $value
-     * @return array
-     */
     private function doReplacementsInArray(array $value): array
     {
         foreach ($value as $k => $v) {
