@@ -132,6 +132,20 @@ class ConfigServiceProviderTest extends TestCase
                 'user' => 'root',
                 'password' => '',
             ],
+            'service' => [
+                'name' => 'Test',
+                'api' => [
+                    'base_url' => 'https://api.example.com',
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'credentials' => [
+                        'login' => 'user',
+                        'password' => '$ecret',
+                    ],
+                ],
+            ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
         $this->createFile('app.json', null, json_encode([
             'db.options' => [
@@ -167,6 +181,21 @@ class ConfigServiceProviderTest extends TestCase
             'password' => 'root',
             'db_name' => 'db_app'
         ], $app['db.options']);
+
+        self::assertSame([
+            'name' => 'Test',
+            'api' => [
+                'base_url' => 'https://api.example.com',
+                'headers' => [
+                    'Content-type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'credentials' => [
+                    'login' => 'user',
+                    'password' => '$ecret',
+                ],
+            ],
+        ], $app['service']);
 
         self::assertSame([
             'monolog.logfile' => $root . '/logs/app.log',
