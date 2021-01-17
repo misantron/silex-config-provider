@@ -6,14 +6,13 @@
 [![PHP Version](https://img.shields.io/packagist/php-v/misantron/silex-config-provider.svg?style=flat-square)](https://github.com/misantron/silex-config-provider)
 [![Packagist](https://img.shields.io/packagist/v/misantron/silex-config-provider.svg?style=flat-square)](https://packagist.org/packages/misantron/silex-config-provider)
 
-Config service provider for [Silex](http://silex.sensiolabs.org) framework with different formats support.  
+Config service provider for [Silex](http://silex.sensiolabs.org) PHP framework with multiple types support.  
 Silex framework is DEPRECATED. Use [symfony/flex](https://github.com/symfony/flex) for future projects.
 
 ## Features
 
-* Support different formats of config files: php, json, ini, xml (require [libxml](https://www.php.net/manual/en/book.libxml.php) and [simplexml](https://www.php.net/manual/en/book.simplexml.php) extensions), toml (require [yosymfony/toml](https://github.com/yosymfony/toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
-* Multiple config file processing
-* Ability to use mixed types of configs inside provider
+* Supported types of config files: php, json, ini, xml (require [libxml](https://www.php.net/manual/en/book.libxml.php) and [simplexml](https://www.php.net/manual/en/book.simplexml.php) extensions), toml (require [yosymfony/toml](https://github.com/yosymfony/toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
+* Ability to use mixed types of configs inside one provider instance
 * On load placeholder replacements
 * Using environment variables for replacement
 
@@ -22,7 +21,7 @@ Silex framework is DEPRECATED. Use [symfony/flex](https://github.com/symfony/fle
 The preferred way to install is through [Composer](https://getcomposer.org).
 Run this command to install the latest stable version:
 
-```shell
+```bash
 composer require misantron/silex-config-provider
 ```
 

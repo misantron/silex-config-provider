@@ -1,15 +1,15 @@
 {
   "name": "misantron/silex-config-provider",
-  "description": "Config service provider for Silex framework with support for php, json, ini, xml, yaml and toml",
+  "description": "Config service provider for Silex PHP framework with multiple types support",
   "keywords": ["php", "silex", "config", "provider"],
   "homepage": "https://github.com/misantron/silex-config-provider",
   "type": "library",
   "license": "MIT",
   "authors": [
     {
-      "name": "Alexandr Ivanov",
+      "name": "Aleksandr Ivanov",
       "email": "misantron@gmail.com",
-      "role": "developer"
+      "role": "Developer"
     }
   ],
   "require": {
@@ -27,12 +27,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Misantron\\Silex\\Provider\\": "src/"
+      "Misantron\\Silex\\Provider\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Misantron\\Silex\\Provider\\Tests\\": "tests/"
+      "Misantron\\Silex\\Provider\\Tests\\": "tests"
     }
   },
   "config": {
