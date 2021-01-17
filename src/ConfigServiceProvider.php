@@ -29,13 +29,6 @@ class ConfigServiceProvider implements ServiceProviderInterface
 
     public function register(Container $app): void
     {
-        $config = $this->loadConfigFromPaths();
-
-        $this->doConfigReplacements($app, $config);
-    }
-
-    private function loadConfigFromPaths(): array
-    {
         $config = array_reduce($this->paths, function (array $carry, string $path) {
             $loader = $this->loaderFactory->create($path);
             $carry = array_replace_recursive($carry, $loader->load());
@@ -44,22 +37,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }, []);
 
         if (\count($config) === 0) {
-            throw InvalidConfigException::emptyData();
+            throw InvalidConfigException::emptyContent();
         }
 
-        return $config;
-    }
-
-    private function createReplacements(array $replacements): void
-    {
-        $this->replacements = [];
-        foreach ($replacements as $placeholder => $value) {
-            $this->replacements['%' . $placeholder . '%'] = $value;
-        }
-    }
-
-    private function doConfigReplacements(Container $app, array $config): void
-    {
         foreach ($config as $name => $value) {
             switch (gettype($value)) {
                 case 'array':
@@ -74,9 +54,17 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }
     }
 
+    private function createReplacements(array $replacements): void
+    {
+        $this->replacements = [];
+        foreach ($replacements as $placeholder => $value) {
+            $this->replacements['%' . $placeholder . '%'] = $value;
+        }
+    }
+
     private function doReplacementsInString(string $value): string
     {
-        // replace special %env(VAR)% syntax with values from the environment
+        // replace special placeholders %env(VAR)% with environment variables
         if (preg_match('/%env\(([\w]+)\)%/', $value, $matches)) {
             $value = (string) getenv($matches[1] ?? '');
         }

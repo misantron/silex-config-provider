@@ -16,7 +16,7 @@ class DefaultLoaderFactoryTest extends TestCase
     public function testCreateWithNotExistConfigFile(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Config file is not a file');
+        $this->expectExceptionMessage('Config is not a file');
 
         $factory = new DefaultLoaderFactory();
         $factory->create($this->getFilePath('not.exist'));

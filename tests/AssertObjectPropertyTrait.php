@@ -10,22 +10,22 @@ namespace Misantron\Silex\Provider\Tests;
  */
 trait AssertObjectPropertyTrait
 {
-    public function assertPropertySame($expected, string $attributeName, $actual): void
+    public function assertPropertySame($expected, string $attributeName, object $actual): void
     {
-        static::assertSame($expected, $this->getObjectPropertyValue($actual, $attributeName));
+        static::assertSame($expected, $this->extractPropertyValue($actual, $attributeName));
     }
 
-    public function assertPropertyInstanceOf(string $expected, string $attributeName, $actual): void
+    public function assertPropertyInstanceOf(string $expected, string $attributeName, object $actual): void
     {
-        static::assertInstanceOf($expected, $this->getObjectPropertyValue($actual, $attributeName));
+        static::assertInstanceOf($expected, $this->extractPropertyValue($actual, $attributeName));
     }
 
-    private function getObjectPropertyValue($obj, string $name)
+    private function extractPropertyValue(object $obj, string $name)
     {
-        $class = new \ReflectionClass($obj);
-        $method = $class->getProperty($name);
-        $method->setAccessible(true);
+        $reflection = new \ReflectionClass($obj);
+        $prop = $reflection->getProperty($name);
+        $prop->setAccessible(true);
 
-        return $method->getValue($obj);
+        return $prop->getValue($obj);
     }
 }

@@ -15,17 +15,17 @@ class InvalidConfigException extends \RuntimeException
         return new self('Unsupported config file type provided: ' . $ext);
     }
 
-    public static function notFile(): self
+    public static function notAFile(): self
     {
-        return new self('Config file is not a file');
+        return new self('Config is not a file');
     }
 
-    public static function notReadableFile(): self
+    public static function notReadable(): self
     {
         return new self('Config file is not readable');
     }
 
-    public static function emptyData(): self
+    public static function emptyContent(): self
     {
         return new self('No configuration data provided');
     }

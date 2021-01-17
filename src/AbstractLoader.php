@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Misantron\Silex\Provider;
 
-use Misantron\Silex\Provider\Exception\ConfigParsingException;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
 
 /**
@@ -20,12 +19,6 @@ abstract class AbstractLoader implements LoaderInterface
         $this->file = $file;
     }
 
-    /**
-     * @return array
-     *
-     * @throws ConfigParsingException
-     * @throws \AssertionError
-     */
     abstract protected function parse(): array;
 
     public function load(): array

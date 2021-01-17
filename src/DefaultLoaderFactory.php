@@ -18,10 +18,10 @@ final class DefaultLoaderFactory implements LoaderFactoryInterface
         $file = new \SplFileInfo($path);
 
         if (!$file->isFile()) {
-            throw InvalidConfigException::notFile();
+            throw InvalidConfigException::notAFile();
         }
         if (!$file->isReadable()) {
-            throw InvalidConfigException::notReadableFile();
+            throw InvalidConfigException::notReadable();
         }
 
         return $this->createLoaderByFileExtension($file);
