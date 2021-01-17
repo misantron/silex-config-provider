@@ -12,8 +12,9 @@ Silex framework is DEPRECATED. Use [symfony/flex](https://github.com/symfony/fle
 ## Features
 
 * Supported types of config files: php, json, ini, xml (require [libxml](https://www.php.net/manual/en/book.libxml.php) and [simplexml](https://www.php.net/manual/en/book.simplexml.php) extensions), toml (require [yosymfony/toml](https://github.com/yosymfony/toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
-* Ability to use mixed types of configs inside one provider instance
+* Using mixed types of configs inside one provider instance
 * On load placeholder replacements
+* Config key aliases
 * Using environment variables for replacement
 
 ## Installation
@@ -25,60 +26,6 @@ Run this command to install the latest stable version:
 composer require misantron/silex-config-provider
 ```
 
-## Usage
+## Documentation
 
-### Basic
-
-```php
-$provider = new \Misantron\Silex\Provider\ConfigServiceProvider([
-    __DIR__ . '/../config/common.php',
-]);
-
-$app = new Application();
-$app->register($provider);
-```
-
-### Merge configs with replacement
-
-```php
-$provider = new \Misantron\Silex\Provider\ConfigServiceProvider(
-    [
-        __DIR__ . '/../config/common.php',
-        __DIR__ . '/../config/app.php',
-    ],
-    [
-        'ROOT_PATH' => realpath(__DIR__ . '/..')
-    ]
-);
-
-$app = new Application();
-$app->register($provider);
-```
-
-### Replacement with env variables
-
-```php
-// config/app.php
-return [
-    'template.base' => '%env(TPL_ROOT)%',
-];
-```
-
-```php
-putenv('TPL_ROOT=/usr/path');
-
-$root = '/app/path';
-$provider = new \Misantron\Silex\Provider\ConfigServiceProvider(
-    [
-        __DIR__ . '/../config/app.php',
-    ],
-    [
-        'ROOT_PATH' => $root,
-    ]
-);
-
-$app = new Application();
-$app->register($provider);
-
-var_dump($app['template.base']); // /usr/path
-```
+Available [here](https://github.com/misantron/silex-config-provider/wiki)
