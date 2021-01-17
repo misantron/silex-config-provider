@@ -18,11 +18,17 @@ class ConfigServiceProvider implements ServiceProviderInterface
 
     private array $paths;
     private array $replacements;
+    private array $aliases;
 
-    public function __construct(array $paths, array $replacements = [], LoaderFactoryInterface $loaderFactory = null)
-    {
+    public function __construct(
+        array $paths,
+        array $replacements = [],
+        array $aliases = [],
+        LoaderFactoryInterface $loaderFactory = null
+    ) {
         $this->loaderFactory = $loaderFactory ?? new DefaultLoaderFactory();
         $this->paths = $paths;
+        $this->aliases = $aliases;
 
         $this->createReplacements($replacements);
     }
@@ -41,15 +47,17 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }
 
         foreach ($config as $name => $value) {
+            // replace key with alias if defined
+            $key = $this->aliases[$name] ?? $name;
             switch (gettype($value)) {
                 case 'array':
-                    $app[$name] = $this->doReplacementsInArray($value);
+                    $app[$key] = $this->doReplacementsInArray($value);
                     break;
                 case 'string':
-                    $app[$name] = $this->doReplacementsInString($value);
+                    $app[$key] = $this->doReplacementsInString($value);
                     break;
                 default:
-                    $app[$name] = $value;
+                    $app[$key] = $value;
             }
         }
     }
@@ -72,15 +80,17 @@ class ConfigServiceProvider implements ServiceProviderInterface
         return strtr($value, $this->replacements);
     }
 
-    private function doReplacementsInArray(array $value): array
+    private function doReplacementsInArray(array $list): array
     {
-        foreach ($value as $k => $v) {
-            if (\is_array($v)) {
-                $value[$k] = $this->doReplacementsInArray($v);
-            } elseif (\is_string($v)) {
-                $value[$k] = $this->doReplacementsInString($v);
+        foreach ($list as $name => $value) {
+            // replace key with alias if defined
+            $key = $this->aliases[$name] ?? $name;
+            if (\is_array($value)) {
+                $list[$key] = $this->doReplacementsInArray($value);
+            } elseif (\is_string($value)) {
+                $list[$key] = $this->doReplacementsInString($value);
             }
         }
-        return $value;
+        return $list;
     }
 }

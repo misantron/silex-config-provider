@@ -202,4 +202,33 @@ class ConfigServiceProviderTest extends TestCase
             'monolog.name' => 'app'
         ], $app['logger']);
     }
+
+    public function testRegisterWithKeyAlias(): void
+    {
+        $this->createFile('aliases.json', null, json_encode([
+            'db.credentials' => [
+                'driver' => 'pdo_mysql',
+                'host' => 'localhost',
+                'name' => 'db_app',
+                'user' => 'app',
+                'password' => 'root',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+
+        $provider = new ConfigServiceProvider(
+            [
+                $this->getFilePath('aliases.json'),
+            ],
+            [],
+            [
+                'db.credentials' => 'db.options',
+            ]
+        );
+
+        $app = new Application();
+        $app->register($provider);
+
+        self::assertArrayHasKey('db.options', $app);
+        self::assertArrayNotHasKey('db.credentials', $app);
+    }
 }
