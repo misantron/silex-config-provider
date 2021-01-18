@@ -95,28 +95,22 @@ class ConfigServiceProviderTest extends TestCase
     {
         $root = realpath(__DIR__ . '/..');
 
-        putenv('ENV_VAR=foo');
-        putenv('ENV_VAR_1=bar');
-        putenv('ENVVAR=baz');
-        putenv('ENVVAR1=%ROOT_PATH%');
+        putenv('DATABASE_URL=mysql://localhost:3306');
+        putenv('ROOT_PATH=%ROOT_PATH%');
 
         $this->createFile('env.json', null, json_encode([
-            'env.var' => '%env(ENV_VAR)%',
-            'env.var.1' => '%env(ENV_VAR_1)%',
-            'envvar' => '%env(ENVVAR)%',
-            'envvar1' => '%env(ENVVAR1)%',
+            'db.dsn' => '%env(string:DATABASE_URL)%',
+            'root.path' => '%env(string:ROOT_PATH)%',
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 
-        $app = new Application();
+        $app = new Application(['debug' => false]);
         $app->register(new ConfigServiceProvider(
             [$this->getFilePath('env.json')],
             ['ROOT_PATH' => $root]
         ));
 
-        self::assertSame('foo', $app['env.var']);
-        self::assertSame('bar', $app['env.var.1']);
-        self::assertSame('baz', $app['envvar']);
-        self::assertSame($root, $app['envvar1']);
+        self::assertSame('mysql://localhost:3306', $app['db.dsn']);
+        self::assertSame($root, $app['root.path']);
     }
 
     public function testRegisterWithConfigFilesMergeAndReplacements(): void

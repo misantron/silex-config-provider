@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Misantron\Silex\Provider;
 
+use Misantron\Silex\Provider\Environment\DefaultResolver;
+use Misantron\Silex\Provider\Environment\ResolverInterface;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -15,6 +17,7 @@ use Pimple\ServiceProviderInterface;
 class ConfigServiceProvider implements ServiceProviderInterface
 {
     private LoaderFactoryInterface $loaderFactory;
+    private ResolverInterface $environmentResolver;
 
     private array $paths;
     private array $replacements;
@@ -24,9 +27,11 @@ class ConfigServiceProvider implements ServiceProviderInterface
         array $paths,
         array $replacements = [],
         array $aliases = [],
-        LoaderFactoryInterface $loaderFactory = null
+        LoaderFactoryInterface $loaderFactory = null,
+        ResolverInterface $environmentResolver = null
     ) {
         $this->loaderFactory = $loaderFactory ?? new DefaultLoaderFactory();
+        $this->environmentResolver = $environmentResolver ?? new DefaultResolver();
         $this->paths = $paths;
         $this->aliases = $aliases;
 
@@ -70,14 +75,14 @@ class ConfigServiceProvider implements ServiceProviderInterface
         }
     }
 
-    private function doReplacementsInString(string $value): string
+    private function doReplacementsInString(string $value)
     {
-        // replace special placeholders %env(VAR)% with environment variables
-        if (preg_match('/%env\(([\w]+)\)%/', $value, $matches)) {
-            $value = (string) getenv($matches[1] ?? '');
+        $resolved = $this->environmentResolver->resolve($value);
+        if (\is_string($resolved)) {
+            return strtr($resolved, $this->replacements);
         }
 
-        return strtr($value, $this->replacements);
+        return $resolved;
     }
 
     private function doReplacementsInArray(array $list): array
