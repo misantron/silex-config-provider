@@ -95,10 +95,12 @@ class ConfigServiceProviderTest extends TestCase
     {
         $root = realpath(__DIR__ . '/..');
 
+        putenv('APP_ENV=true');
         putenv('DATABASE_URL=mysql://localhost:3306');
         putenv('ROOT_PATH=%ROOT_PATH%');
 
         $this->createFile('env.json', null, json_encode([
+            'debug' => '%env(bool:APP_ENV)%',
             'db.dsn' => '%env(string:DATABASE_URL)%',
             'root.path' => '%env(string:ROOT_PATH)%',
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
@@ -109,6 +111,7 @@ class ConfigServiceProviderTest extends TestCase
             ['ROOT_PATH' => $root]
         ));
 
+        self::assertTrue($app['debug']);
         self::assertSame('mysql://localhost:3306', $app['db.dsn']);
         self::assertSame($root, $app['root.path']);
     }
