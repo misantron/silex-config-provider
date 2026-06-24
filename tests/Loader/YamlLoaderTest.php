@@ -14,7 +14,7 @@ final class YamlLoaderTest extends TestCase
     {
         $this->expectException(ConfigParsingException::class);
         $this->expectExceptionMessage(
-            'Unable to parse config file: Unexpected token "test" at line 1 (near "foo: {bar} test").',
+            'Unable to parse config file: Unexpected token &quot;test&quot; at line 1 (near &quot;foo: {bar} test&quot;).',
         );
 
         $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.yml');
