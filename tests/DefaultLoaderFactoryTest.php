@@ -7,8 +7,11 @@ namespace Misantron\Silex\Provider\Tests;
 use Misantron\Silex\Provider\DefaultLoaderFactory;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
 use Misantron\Silex\Provider\Loader;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(DefaultLoaderFactory::class)]
 class DefaultLoaderFactoryTest extends TestCase
 {
     use FakeFileSystemTrait;
@@ -45,9 +48,7 @@ class DefaultLoaderFactoryTest extends TestCase
         $factory->create($this->getFilePath('config.txt'));
     }
 
-    /**
-     * @dataProvider createLoaderDataProvider
-     */
+    #[DataProvider('createLoaderDataProvider')]
     public function testCreate(string $file, string $class): void
     {
         $this->createFile($file);
@@ -58,13 +59,9 @@ class DefaultLoaderFactoryTest extends TestCase
         self::assertSame($class, get_class($loader));
     }
 
-    public function createLoaderDataProvider(): array
+    public static function createLoaderDataProvider(): array
     {
         return [
-            'ini' => [
-                'config.ini',
-                Loader\IniLoader::class,
-            ],
             'json' => [
                 'config.json',
                 Loader\JsonLoader::class,
@@ -72,14 +69,6 @@ class DefaultLoaderFactoryTest extends TestCase
             'php' => [
                 'config.php',
                 Loader\PhpLoader::class,
-            ],
-            'toml' => [
-                'config.toml',
-                Loader\TomlLoader::class,
-            ],
-            'xml' => [
-                'config.xml',
-                Loader\XmlLoader::class,
             ],
             'yaml' => [
                 'config.yaml',

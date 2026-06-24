@@ -12,9 +12,9 @@ use Misantron\Silex\Provider\Exception\EnvResolvingException;
  */
 final class DefaultResolver implements ResolverInterface
 {
-    private const PATTERN = '/%env\(([a-z]+):([A-Z0-9_]+)\)%/';
+    private const string PATTERN = '/%env\(([a-z]+):([A-Z0-9_]+)\)%/';
 
-    public function resolve(string $value)
+    public function resolve(string $value): mixed
     {
         if (preg_match(self::PATTERN, $value, $matches)) {
             $value = $this->process($matches[1], $matches[2]);
@@ -23,7 +23,7 @@ final class DefaultResolver implements ResolverInterface
         return $value;
     }
 
-    private function process(string $prefix, string $name)
+    private function process(string $prefix, string $name): mixed
     {
         $value = getenv($name);
         if ($value === false) {

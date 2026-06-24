@@ -10,5 +10,5 @@ namespace Misantron\Silex\Provider\Environment;
  */
 interface ResolverInterface
 {
-    public function resolve(string $value);
+    public function resolve(string $value): mixed;
 }

@@ -22,10 +22,6 @@ trait AssertObjectPropertyTrait
 
     private function extractPropertyValue(object $obj, string $name)
     {
-        $reflection = new \ReflectionClass($obj);
-        $prop = $reflection->getProperty($name);
-        $prop->setAccessible(true);
-
-        return $prop->getValue($obj);
+        return (new \ReflectionProperty($obj, $name))->getValue($obj);
     }
 }

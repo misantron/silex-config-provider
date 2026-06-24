@@ -27,8 +27,8 @@ class ConfigServiceProvider implements ServiceProviderInterface
         array $paths,
         array $replacements = [],
         array $aliases = [],
-        LoaderFactoryInterface $loaderFactory = null,
-        ResolverInterface $environmentResolver = null
+        ?LoaderFactoryInterface $loaderFactory = null,
+        ?ResolverInterface $environmentResolver = null,
     ) {
         $this->loaderFactory = $loaderFactory ?? new DefaultLoaderFactory();
         $this->environmentResolver = $environmentResolver ?? new DefaultResolver();
@@ -38,13 +38,12 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $this->createReplacements($replacements);
     }
 
-    public function register(Container $app): void
+    public function register(Container $pimple): void
     {
         $config = array_reduce($this->paths, function (array $carry, string $path) {
             $loader = $this->loaderFactory->create($path);
-            $carry = array_replace_recursive($carry, $loader->load());
 
-            return $carry;
+            return array_replace_recursive($carry, $loader->load());
         }, []);
 
         if (\count($config) === 0) {
@@ -54,16 +53,11 @@ class ConfigServiceProvider implements ServiceProviderInterface
         foreach ($config as $name => $value) {
             // replace key with alias if defined
             $key = $this->aliases[$name] ?? $name;
-            switch (gettype($value)) {
-                case 'array':
-                    $app[$key] = $this->doReplacementsInArray($value);
-                    break;
-                case 'string':
-                    $app[$key] = $this->doReplacementsInString($value);
-                    break;
-                default:
-                    $app[$key] = $value;
-            }
+            $pimple[$key] = match (gettype($value)) {
+                'array' => $this->doReplacementsInArray($value),
+                'string' => $this->doReplacementsInString($value),
+                default => $value,
+            };
         }
     }
 
