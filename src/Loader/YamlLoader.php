@@ -29,9 +29,7 @@ class YamlLoader extends AbstractLoader
             $parser = new Parser();
             $config = $parser->parse($this->getFileContents());
         } catch (ParseException $exception) {
-            throw ConfigParsingException::withReason(
-                htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8'),
-            );
+            throw ConfigParsingException::withReason($exception->getMessage());
         }
 
         return $config;

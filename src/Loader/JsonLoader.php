@@ -18,9 +18,7 @@ class JsonLoader extends AbstractLoader
         try {
             $config = json_decode($this->getFileContents(), true, flags: JSON_THROW_ON_ERROR);
         } catch (InvalidArgumentException | \JsonException $exception) {
-            throw ConfigParsingException::withReason(
-                htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8'),
-            );
+            throw ConfigParsingException::withReason($exception->getMessage());
         }
 
         return $config;
