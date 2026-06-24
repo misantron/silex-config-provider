@@ -8,7 +8,6 @@ use Misantron\Silex\Provider\AbstractLoader;
 use Misantron\Silex\Provider\Exception\ConfigParsingException;
 
 /**
- * Class PhpLoader
  * @package Misantron\Silex\Provider\Loader
  */
 class PhpLoader extends AbstractLoader
@@ -16,11 +15,12 @@ class PhpLoader extends AbstractLoader
     protected function parse(): array
     {
         $config = require $this->getFilePath();
-        if (!\is_iterable($config)) {
+        if (! \is_iterable($config)) {
             throw ConfigParsingException::withReason('config is not iterable');
         }
+
         if ($config instanceof \Traversable) {
-            $config = iterator_to_array($config);
+            return iterator_to_array($config);
         }
 
         return $config;

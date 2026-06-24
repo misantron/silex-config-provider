@@ -8,7 +8,7 @@ use Misantron\Silex\Provider\Exception\ConfigParsingException;
 use Misantron\Silex\Provider\Loader\JsonLoader;
 use PHPUnit\Framework\TestCase;
 
-class JsonLoaderTest extends TestCase
+final class JsonLoaderTest extends TestCase
 {
     public function testLoadInvalidConfigFile(): void
     {
@@ -26,6 +26,8 @@ class JsonLoaderTest extends TestCase
 
         $config = (new JsonLoader($file))->load();
 
-        self::assertSame(['foo' => 'bar'], $config);
+        $this->assertSame([
+            'foo' => 'bar',
+        ], $config);
     }
 }

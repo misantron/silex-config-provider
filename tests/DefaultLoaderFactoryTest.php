@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Misantron\Silex\Provider\Tests;
 
+use Misantron\Silex\Provider\Loader\JsonLoader;
+use Misantron\Silex\Provider\Loader\PhpLoader;
+use Misantron\Silex\Provider\Loader\YamlLoader;
 use Misantron\Silex\Provider\DefaultLoaderFactory;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
-use Misantron\Silex\Provider\Loader;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class DefaultLoaderFactoryTest extends TestCase
+#[CoversClass(DefaultLoaderFactory::class)]
+final class DefaultLoaderFactoryTest extends TestCase
 {
     use FakeFileSystemTrait;
 
@@ -45,9 +50,7 @@ class DefaultLoaderFactoryTest extends TestCase
         $factory->create($this->getFilePath('config.txt'));
     }
 
-    /**
-     * @dataProvider createLoaderDataProvider
-     */
+    #[DataProvider('createLoaderDataProvider')]
     public function testCreate(string $file, string $class): void
     {
         $this->createFile($file);
@@ -55,40 +58,26 @@ class DefaultLoaderFactoryTest extends TestCase
         $factory = new DefaultLoaderFactory();
         $loader = $factory->create($this->getfilePath($file));
 
-        self::assertSame($class, get_class($loader));
+        $this->assertInstanceOf($class, $loader);
     }
 
-    public function createLoaderDataProvider(): array
+    public static function createLoaderDataProvider(): \Iterator
     {
-        return [
-            'ini' => [
-                'config.ini',
-                Loader\IniLoader::class,
-            ],
-            'json' => [
-                'config.json',
-                Loader\JsonLoader::class,
-            ],
-            'php' => [
-                'config.php',
-                Loader\PhpLoader::class,
-            ],
-            'toml' => [
-                'config.toml',
-                Loader\TomlLoader::class,
-            ],
-            'xml' => [
-                'config.xml',
-                Loader\XmlLoader::class,
-            ],
-            'yaml' => [
-                'config.yaml',
-                Loader\YamlLoader::class,
-            ],
-            'yml' => [
-                'config.yml',
-                Loader\YamlLoader::class,
-            ],
+        yield 'json' => [
+            'config.json',
+            JsonLoader::class,
+        ];
+        yield 'php' => [
+            'config.php',
+            PhpLoader::class,
+        ];
+        yield 'yaml' => [
+            'config.yaml',
+            YamlLoader::class,
+        ];
+        yield 'yml' => [
+            'config.yml',
+            YamlLoader::class,
         ];
     }
 }

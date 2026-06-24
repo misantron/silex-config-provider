@@ -11,40 +11,35 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 /**
- * Class ConfigServiceProvider
  * @package Misantron\Silex\Provider
  */
 class ConfigServiceProvider implements ServiceProviderInterface
 {
-    private LoaderFactoryInterface $loaderFactory;
-    private ResolverInterface $environmentResolver;
+    private readonly LoaderFactoryInterface $loaderFactory;
 
-    private array $paths;
+    private readonly ResolverInterface $environmentResolver;
+
     private array $replacements;
-    private array $aliases;
 
     public function __construct(
-        array $paths,
+        private readonly array $paths,
         array $replacements = [],
-        array $aliases = [],
-        LoaderFactoryInterface $loaderFactory = null,
-        ResolverInterface $environmentResolver = null
+        private array $aliases = [],
+        ?LoaderFactoryInterface $loaderFactory = null,
+        ?ResolverInterface $environmentResolver = null,
     ) {
         $this->loaderFactory = $loaderFactory ?? new DefaultLoaderFactory();
         $this->environmentResolver = $environmentResolver ?? new DefaultResolver();
-        $this->paths = $paths;
-        $this->aliases = $aliases;
 
         $this->createReplacements($replacements);
     }
 
-    public function register(Container $app): void
+    public function register(Container $pimple): void
     {
         $config = array_reduce($this->paths, function (array $carry, string $path) {
             $loader = $this->loaderFactory->create($path);
-            $carry = array_replace_recursive($carry, $loader->load());
 
-            return $carry;
+            return array_replace_recursive($carry, $loader->load());
         }, []);
 
         if (\count($config) === 0) {
@@ -54,16 +49,11 @@ class ConfigServiceProvider implements ServiceProviderInterface
         foreach ($config as $name => $value) {
             // replace key with alias if defined
             $key = $this->aliases[$name] ?? $name;
-            switch (gettype($value)) {
-                case 'array':
-                    $app[$key] = $this->doReplacementsInArray($value);
-                    break;
-                case 'string':
-                    $app[$key] = $this->doReplacementsInString($value);
-                    break;
-                default:
-                    $app[$key] = $value;
-            }
+            $pimple[$key] = match (true) {
+                is_array($value) => $this->doReplacementsInArray($value),
+                is_string($value) => $this->doReplacementsInString($value),
+                default => $value,
+            };
         }
     }
 
@@ -96,6 +86,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
                 $list[$key] = $this->doReplacementsInString($value);
             }
         }
+
         return $list;
     }
 }

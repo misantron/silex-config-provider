@@ -11,7 +11,7 @@ Silex framework is DEPRECATED. Use [symfony/flex](https://github.com/symfony/fle
 
 ## Features
 
-* Supported types of config files: php, json, ini, xml (require [libxml](https://www.php.net/manual/en/book.libxml.php) and [simplexml](https://www.php.net/manual/en/book.simplexml.php) extensions), toml (require [yosymfony/toml](https://github.com/yosymfony/toml)) and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
+* Supported types of config files: php, json and yaml (require [symfony/yaml](https://github.com/symfony/yaml))
 * Using mixed types of configs inside one provider instance
 * On load placeholder replacements
 * Config key aliases

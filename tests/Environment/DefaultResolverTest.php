@@ -8,7 +8,7 @@ use Misantron\Silex\Provider\Environment\DefaultResolver;
 use Misantron\Silex\Provider\Exception\EnvResolvingException;
 use PHPUnit\Framework\TestCase;
 
-class DefaultResolverTest extends TestCase
+final class DefaultResolverTest extends TestCase
 {
     public function testResolveUndefinedVariable(): void
     {
@@ -26,7 +26,7 @@ class DefaultResolverTest extends TestCase
         $resolver = new DefaultResolver();
         $value = $resolver->resolve('%env(string:ENV_VAR)%');
 
-        self::assertSame('test', $value);
+        $this->assertSame('test', $value);
     }
 
     public function testResolveJsonVariableWithInvalidContent(): void
@@ -47,7 +47,9 @@ class DefaultResolverTest extends TestCase
         $resolver = new DefaultResolver();
         $value = $resolver->resolve('%env(json:ENV_VAR)%');
 
-        self::assertSame(['foo' => 'bar'], $value);
+        $this->assertSame([
+            'foo' => 'bar',
+        ], $value);
     }
 
     public function testResolveIntegerVariable(): void
@@ -57,7 +59,7 @@ class DefaultResolverTest extends TestCase
         $resolver = new DefaultResolver();
         $value = $resolver->resolve('%env(int:ENV_VAR)%');
 
-        self::assertSame(42, $value);
+        $this->assertSame(42, $value);
     }
 
     public function testResolveBooleanVariable(): void
@@ -67,7 +69,7 @@ class DefaultResolverTest extends TestCase
         $resolver = new DefaultResolver();
         $value = $resolver->resolve('%env(bool:ENV_VAR)%');
 
-        self::assertTrue($value);
+        $this->assertTrue($value);
     }
 
     public function testResolveFloatVariable(): void
@@ -77,7 +79,7 @@ class DefaultResolverTest extends TestCase
         $resolver = new DefaultResolver();
         $value = $resolver->resolve('%env(float:ENV_VAR)%');
 
-        self::assertSame(5.2, $value);
+        $this->assertEqualsWithDelta(5.2, $value, PHP_FLOAT_EPSILON);
     }
 
     public function testResolveUnsupportedVariable(): void

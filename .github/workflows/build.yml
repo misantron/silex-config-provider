@@ -8,71 +8,76 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/checkout@v7
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: cs-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: cs-composer-
-      - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
-      - name: PHP Code Style run
-        run: vendor/bin/phpcs --standard=phpcs.xml
+          php-version: '8.3'
+          coverage: none
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: locked
+          composer-options: --no-ansi --no-interaction --no-progress
+      - name: ECS run
+        run: vendor/bin/ecs check --clear-cache
+  rector:
+    name: Rector
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: locked
+          composer-options: --no-ansi --no-interaction --no-progress
+      - name: Rector run
+        run: vendor/bin/rector process --dry-run --clear-cache
   tests:
     name: Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '7.4', '8.0', '8.1' ]
+        php-versions: [ '8.3', '8.4', '8.5' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
           coverage: none
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache composer dependencies
-        uses: actions/cache@v3
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php-versions }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php-versions }}-composer-
-      - name: Install dependencies
-        run: composer install --prefer-dist
+          dependency-versions: highest
+          composer-options: --no-ansi --no-interaction --no-progress
       - name: PHPUnit run
-        run: vendor/bin/phpunit --colors=always
+        run: vendor/bin/phpunit
   coverage:
     name: Tests coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: PHP setup
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: '8.3'
           coverage: pcov
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache composer dependencies
-        uses: actions/cache@v3
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: 80-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: 80-composer-
-      - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
+          dependency-versions: locked
+          composer-options: --no-ansi --no-interaction --no-progress
       - name: PHPUnit run with coverage
-        run: vendor/bin/phpunit --colors=always --coverage-clover=clover.xml
+        run: vendor/bin/phpunit --coverage-clover=clover.xml
       - name: Upload coverage report
         uses: codacy/codacy-coverage-reporter-action@master
         with:

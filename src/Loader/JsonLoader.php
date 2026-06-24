@@ -6,9 +6,9 @@ namespace Misantron\Silex\Provider\Loader;
 
 use Misantron\Silex\Provider\AbstractLoader;
 use Misantron\Silex\Provider\Exception\ConfigParsingException;
+use Webmozart\Assert\InvalidArgumentException;
 
 /**
- * Class JsonLoader
  * @package Misantron\Silex\Provider\Loader
  */
 class JsonLoader extends AbstractLoader
@@ -16,9 +16,9 @@ class JsonLoader extends AbstractLoader
     protected function parse(): array
     {
         try {
-            $config = json_decode($this->getFileContents(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\AssertionError | \JsonException $e) {
-            throw ConfigParsingException::withReason($e->getMessage());
+            $config = json_decode($this->getFileContents(), true, flags: JSON_THROW_ON_ERROR);
+        } catch (InvalidArgumentException | \JsonException $exception) {
+            throw ConfigParsingException::withReason($exception->getMessage());
         }
 
         return $config;

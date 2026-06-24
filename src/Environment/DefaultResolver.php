@@ -7,23 +7,22 @@ namespace Misantron\Silex\Provider\Environment;
 use Misantron\Silex\Provider\Exception\EnvResolvingException;
 
 /**
- * Class DefaultResolver
  * @package Misantron\Silex\Provider\Environment
  */
 final class DefaultResolver implements ResolverInterface
 {
-    private const PATTERN = '/%env\(([a-z]+):([A-Z0-9_]+)\)%/';
+    private const string PATTERN = '/%env\(([a-z]+):([A-Z0-9_]+)\)%/';
 
-    public function resolve(string $value)
+    public function resolve(string $value): mixed
     {
         if (preg_match(self::PATTERN, $value, $matches)) {
-            $value = $this->process($matches[1], $matches[2]);
+            return $this->process($matches[1], $matches[2]);
         }
 
         return $value;
     }
 
-    private function process(string $prefix, string $name)
+    private function process(string $prefix, string $name): mixed
     {
         $value = getenv($name);
         if ($value === false) {
@@ -35,7 +34,7 @@ final class DefaultResolver implements ResolverInterface
         }
 
         if ($prefix === 'bool') {
-            return (bool) filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         }
 
         if ($prefix === 'int') {
