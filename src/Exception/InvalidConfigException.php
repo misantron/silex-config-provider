@@ -7,12 +7,12 @@ namespace Misantron\Silex\Provider\Exception;
 /**
  * @package Misantron\Silex\Provider\Exception
  */
-class InvalidConfigException extends \RuntimeException
+final class InvalidConfigException extends \RuntimeException
 {
     public static function unsupportedFileType(string $ext): self
     {
         return new self(
-            'Unsupported config file type provided: ' . htmlspecialchars($ext, ENT_QUOTES, 'UTF-8'),
+            sprintf('Unsupported config file type provided: %s', $ext),
         );
     }
 

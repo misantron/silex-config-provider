@@ -7,7 +7,7 @@ namespace Misantron\Silex\Provider\Exception;
 /**
  * @package Misantron\Silex\Provider\Exception
  */
-class EnvResolvingException extends \RuntimeException
+final class EnvResolvingException extends \RuntimeException
 {
     public static function undefinedVariable(string $name): self
     {
