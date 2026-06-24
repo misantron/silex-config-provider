@@ -35,7 +35,9 @@ final class DefaultLoaderFactory implements LoaderFactoryInterface
             'json' => new JsonLoader($file),
             'php' => new PhpLoader($file),
             'yml', 'yaml' => new YamlLoader($file),
-            default => throw InvalidConfigException::unsupportedFileType($file->getExtension()),
+            default => throw InvalidConfigException::unsupportedFileType(
+                htmlspecialchars($file->getExtension(), ENT_QUOTES, 'UTF-8'),
+            ),
         };
     }
 }
