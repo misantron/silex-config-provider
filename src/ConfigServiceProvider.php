@@ -53,9 +53,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
         foreach ($config as $name => $value) {
             // replace key with alias if defined
             $key = $this->aliases[$name] ?? $name;
-            $pimple[$key] = match (gettype($value)) {
-                'array' => $this->doReplacementsInArray($value),
-                'string' => $this->doReplacementsInString($value),
+            $pimple[$key] = match (true) {
+                is_array($value) => $this->doReplacementsInArray($value),
+                is_string($value) => $this->doReplacementsInString($value),
                 default => $value,
             };
         }
