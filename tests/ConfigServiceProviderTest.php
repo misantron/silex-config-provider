@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use Silex\Application;
 
-class ConfigServiceProviderTest extends TestCase
+final class ConfigServiceProviderTest extends TestCase
 {
     use AssertObjectPropertyTrait;
     use FakeFileSystemTrait;
@@ -21,7 +21,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->createFile('default.json', null, '{"foo":"bar"}');
 
         $provider = new ConfigServiceProvider(
-            [$this->getFilePath('default.json')]
+            [$this->getFilePath('default.json')],
         );
 
         $this->assertPropertyInstanceOf(DefaultLoaderFactory::class, 'loaderFactory', $provider);
@@ -35,11 +35,15 @@ class ConfigServiceProviderTest extends TestCase
 
         $provider = new ConfigServiceProvider(
             [$this->getFilePath('base.json')],
-            ['APP_ROOT' => __DIR__]
+            [
+                'APP_ROOT' => __DIR__,
+            ],
         );
 
         $this->assertPropertySame([$this->getFilePath('base.json')], 'paths', $provider);
-        $this->assertPropertySame(['%APP_ROOT%' => __DIR__], 'replacements', $provider);
+        $this->assertPropertySame([
+            '%APP_ROOT%' => __DIR__,
+        ], 'replacements', $provider);
     }
 
     public function testRegisterWithEmptyConfigData(): void
@@ -50,7 +54,7 @@ class ConfigServiceProviderTest extends TestCase
         $this->createFile('empty.json', null, '{}');
 
         $provider = new ConfigServiceProvider(
-            [$this->getFilePath('empty.json')]
+            [$this->getFilePath('empty.json')],
         );
         $provider->register(new Container());
     }
@@ -72,20 +76,22 @@ class ConfigServiceProviderTest extends TestCase
             ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 
-        $app = new Application(['debug' => false]);
+        $app = new Application([
+            'debug' => false,
+        ]);
         $app->register(new ConfigServiceProvider(
-            [$this->getFilePath('extended.json')]
+            [$this->getFilePath('extended.json')],
         ));
 
-        self::assertTrue($app['debug']);
-        self::assertSame([
+        $this->assertTrue($app['debug']);
+        $this->assertSame([
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
             'user' => 'root',
             'password' => '',
             'db_name' => 'db_test',
         ], $app['db.options']);
-        self::assertSame([
+        $this->assertSame([
             'debug' => true,
             'auto_reload' => true,
         ], $app['twig.options']);
@@ -105,15 +111,19 @@ class ConfigServiceProviderTest extends TestCase
             'root.path' => '%env(string:ROOT_PATH)%',
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 
-        $app = new Application(['debug' => false]);
+        $app = new Application([
+            'debug' => false,
+        ]);
         $app->register(new ConfigServiceProvider(
             [$this->getFilePath('env.json')],
-            ['ROOT_PATH' => $root]
+            [
+                'ROOT_PATH' => $root,
+            ],
         ));
 
-        self::assertTrue($app['debug']);
-        self::assertSame('mysql://localhost:3306', $app['db.dsn']);
-        self::assertSame($root, $app['root.path']);
+        $this->assertTrue($app['debug']);
+        $this->assertSame('mysql://localhost:3306', $app['db.dsn']);
+        $this->assertSame($root, $app['root.path']);
     }
 
     public function testRegisterWithConfigFilesMergeAndReplacements(): void
@@ -152,11 +162,13 @@ class ConfigServiceProviderTest extends TestCase
             ],
             'logger' => [
                 'monolog.logfile' => '%ROOT_PATH%/logs/app.log',
-                'monolog.name' => 'app'
+                'monolog.name' => 'app',
             ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 
-        $app = new Application(['debug' => false]);
+        $app = new Application([
+            'debug' => false,
+        ]);
         $app->register(new ConfigServiceProvider(
             [
                 $this->getFilePath('common.json'),
@@ -164,22 +176,22 @@ class ConfigServiceProviderTest extends TestCase
             ],
             [
                 'ROOT_PATH' => $root,
-            ]
+            ],
         ));
 
-        self::assertTrue($app['debug']);
+        $this->assertTrue($app['debug']);
 
-        self::assertSame('Europe/London', $app['date.timezone']);
+        $this->assertSame('Europe/London', $app['date.timezone']);
 
-        self::assertSame([
+        $this->assertSame([
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
             'user' => 'app',
             'password' => 'root',
-            'db_name' => 'db_app'
+            'db_name' => 'db_app',
         ], $app['db.options']);
 
-        self::assertSame([
+        $this->assertSame([
             'name' => 'Test',
             'api' => [
                 'base_url' => 'https://api.example.com',
@@ -194,9 +206,9 @@ class ConfigServiceProviderTest extends TestCase
             ],
         ], $app['service']);
 
-        self::assertSame([
+        $this->assertSame([
             'monolog.logfile' => $root . '/logs/app.log',
-            'monolog.name' => 'app'
+            'monolog.name' => 'app',
         ], $app['logger']);
     }
 
@@ -219,13 +231,13 @@ class ConfigServiceProviderTest extends TestCase
             [],
             [
                 'db.credentials' => 'db.options',
-            ]
+            ],
         );
 
         $app = new Application();
         $app->register($provider);
 
-        self::assertArrayHasKey('db.options', $app);
-        self::assertArrayNotHasKey('db.credentials', $app);
+        $this->assertArrayHasKey('db.options', $app);
+        $this->assertArrayNotHasKey('db.credentials', $app);
     }
 }

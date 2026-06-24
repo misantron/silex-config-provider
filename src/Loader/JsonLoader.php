@@ -8,7 +8,6 @@ use Misantron\Silex\Provider\AbstractLoader;
 use Misantron\Silex\Provider\Exception\ConfigParsingException;
 
 /**
- * Class JsonLoader
  * @package Misantron\Silex\Provider\Loader
  */
 class JsonLoader extends AbstractLoader

@@ -11,7 +11,6 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
 /**
- * Class YamlLoader
  * @package Misantron\Silex\Provider\Loader
  */
 class YamlLoader extends AbstractLoader
@@ -21,15 +20,15 @@ class YamlLoader extends AbstractLoader
         // @codeCoverageIgnoreStart
         assert(
             InstalledVersions::isInstalled('symfony/yaml'),
-            'Yaml parser library is not installed'
+            'Yaml parser library is not installed',
         );
         // @codeCoverageIgnoreEnd
 
         try {
             $parser = new Parser();
             $config = $parser->parse($this->getFileContents());
-        } catch (ParseException $e) {
-            throw ConfigParsingException::withReason($e->getMessage());
+        } catch (ParseException $parseException) {
+            throw ConfigParsingException::withReason($parseException->getMessage());
         }
 
         return $config;

@@ -8,7 +8,7 @@ use Misantron\Silex\Provider\Exception\ConfigParsingException;
 use Misantron\Silex\Provider\Loader\PhpLoader;
 use PHPUnit\Framework\TestCase;
 
-class PhpLoaderTest extends TestCase
+final class PhpLoaderTest extends TestCase
 {
     public function testLoadInvalidConfigFile(): void
     {
@@ -26,7 +26,9 @@ class PhpLoaderTest extends TestCase
 
         $config = (new PhpLoader($file))->load();
 
-        self::assertSame(['foo' => 'bar'], $config);
+        $this->assertSame([
+            'foo' => 'bar',
+        ], $config);
     }
 
     public function testLoadWithArray(): void
@@ -35,6 +37,8 @@ class PhpLoaderTest extends TestCase
 
         $config = (new PhpLoader($file))->load();
 
-        self::assertSame(['foo' => 'bar'], $config);
+        $this->assertSame([
+            'foo' => 'bar',
+        ], $config);
     }
 }

@@ -11,29 +11,25 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 /**
- * Class ConfigServiceProvider
  * @package Misantron\Silex\Provider
  */
 class ConfigServiceProvider implements ServiceProviderInterface
 {
-    private LoaderFactoryInterface $loaderFactory;
-    private ResolverInterface $environmentResolver;
+    private readonly LoaderFactoryInterface $loaderFactory;
 
-    private array $paths;
+    private readonly ResolverInterface $environmentResolver;
+
     private array $replacements;
-    private array $aliases;
 
     public function __construct(
-        array $paths,
+        private readonly array $paths,
         array $replacements = [],
-        array $aliases = [],
+        private array $aliases = [],
         ?LoaderFactoryInterface $loaderFactory = null,
         ?ResolverInterface $environmentResolver = null,
     ) {
         $this->loaderFactory = $loaderFactory ?? new DefaultLoaderFactory();
         $this->environmentResolver = $environmentResolver ?? new DefaultResolver();
-        $this->paths = $paths;
-        $this->aliases = $aliases;
 
         $this->createReplacements($replacements);
     }
@@ -90,6 +86,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
                 $list[$key] = $this->doReplacementsInString($value);
             }
         }
+
         return $list;
     }
 }

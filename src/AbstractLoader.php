@@ -7,23 +7,19 @@ namespace Misantron\Silex\Provider;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
 
 /**
- * Class AbstractLoader
  * @package Misantron\Silex\Provider
  */
 abstract class AbstractLoader implements LoaderInterface
 {
-    private \SplFileInfo $file;
-
-    public function __construct(\SplFileInfo $file)
-    {
-        $this->file = $file;
-    }
+    public function __construct(
+        private readonly \SplFileInfo $file,
+    ) {}
 
     abstract protected function parse(): array;
 
     public function load(): array
     {
-        if (!\in_array($this->file->getExtension(), $this->getSupportedExtensions(), true)) {
+        if (! \in_array($this->file->getExtension(), $this->getSupportedExtensions(), true)) {
             throw InvalidConfigException::unsupportedFileType($this->file->getExtension());
         }
 
@@ -35,7 +31,7 @@ abstract class AbstractLoader implements LoaderInterface
         $path = $this->file->getRealPath();
         assert(
             \is_string($path),
-            'File path is invalid'
+            'File path is invalid',
         );
 
         return $path;
@@ -48,7 +44,7 @@ abstract class AbstractLoader implements LoaderInterface
         $contents = $file->fread($file->getSize());
         assert(
             \is_string($contents),
-            'File content reading error'
+            'File content reading error',
         );
 
         return $contents;

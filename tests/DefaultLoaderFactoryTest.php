@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Misantron\Silex\Provider\Tests;
 
+use Misantron\Silex\Provider\Loader\JsonLoader;
+use Misantron\Silex\Provider\Loader\PhpLoader;
+use Misantron\Silex\Provider\Loader\YamlLoader;
 use Misantron\Silex\Provider\DefaultLoaderFactory;
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
-use Misantron\Silex\Provider\Loader;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(DefaultLoaderFactory::class)]
-class DefaultLoaderFactoryTest extends TestCase
+final class DefaultLoaderFactoryTest extends TestCase
 {
     use FakeFileSystemTrait;
 
@@ -56,28 +58,26 @@ class DefaultLoaderFactoryTest extends TestCase
         $factory = new DefaultLoaderFactory();
         $loader = $factory->create($this->getfilePath($file));
 
-        self::assertSame($class, get_class($loader));
+        $this->assertInstanceOf($class, $loader);
     }
 
-    public static function createLoaderDataProvider(): array
+    public static function createLoaderDataProvider(): \Iterator
     {
-        return [
-            'json' => [
-                'config.json',
-                Loader\JsonLoader::class,
-            ],
-            'php' => [
-                'config.php',
-                Loader\PhpLoader::class,
-            ],
-            'yaml' => [
-                'config.yaml',
-                Loader\YamlLoader::class,
-            ],
-            'yml' => [
-                'config.yml',
-                Loader\YamlLoader::class,
-            ],
+        yield 'json' => [
+            'config.json',
+            JsonLoader::class,
+        ];
+        yield 'php' => [
+            'config.php',
+            PhpLoader::class,
+        ];
+        yield 'yaml' => [
+            'config.yaml',
+            YamlLoader::class,
+        ];
+        yield 'yml' => [
+            'config.yml',
+            YamlLoader::class,
         ];
     }
 }

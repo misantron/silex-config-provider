@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Misantron\Silex\Provider\Exception;
 
 /**
- * Class ConfigParseException
  * @package Misantron\Silex\Provider\Exception
  */
 class ConfigParsingException extends \RuntimeException

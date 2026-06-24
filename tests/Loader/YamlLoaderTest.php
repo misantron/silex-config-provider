@@ -8,13 +8,13 @@ use Misantron\Silex\Provider\Exception\ConfigParsingException;
 use Misantron\Silex\Provider\Loader\YamlLoader;
 use PHPUnit\Framework\TestCase;
 
-class YamlLoaderTest extends TestCase
+final class YamlLoaderTest extends TestCase
 {
     public function testLoadInvalidConfigFile(): void
     {
         $this->expectException(ConfigParsingException::class);
         $this->expectExceptionMessage(
-            'Unable to parse config file: Unexpected token "test" at line 1 (near "foo: {bar} test").'
+            'Unable to parse config file: Unexpected token "test" at line 1 (near "foo: {bar} test").',
         );
 
         $file = new \SplFileInfo(__DIR__ . '/../resources/invalid.yml');
@@ -28,6 +28,8 @@ class YamlLoaderTest extends TestCase
 
         $config = (new YamlLoader($file))->load();
 
-        self::assertSame(['foo' => 'bar'], $config);
+        $this->assertSame([
+            'foo' => 'bar',
+        ], $config);
     }
 }

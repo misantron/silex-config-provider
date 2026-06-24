@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Misantron\Silex\Provider\Tests;
 
 /**
- * Trait AssertObjectPropertyTrait
  * @package Misantron\Silex\Provider\Tests
  */
 trait AssertObjectPropertyTrait
