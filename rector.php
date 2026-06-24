@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
@@ -13,6 +14,7 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         __DIR__ . '/tests/resources',
+        CatchExceptionNameMatchingTypeRector::class,
     ])
     ->withImportNames(importShortClasses: false)
     ->withPhpSets(php83: true)
