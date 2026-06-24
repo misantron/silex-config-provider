@@ -16,7 +16,7 @@
     "php": ">=8.3",
     "composer-runtime-api": "^2.0",
     "silex/silex": "^2.3",
-    "webmozart/assert": "^2.4"
+    "webmozart/assert": "^1.10 || ^2.4"
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.6",
