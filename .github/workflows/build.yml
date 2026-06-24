@@ -56,7 +56,7 @@ jobs:
       - name: Install composer dependencies
         uses: ramsey/composer-install@v4
         with:
-          dependency-versions: locked
+          dependency-versions: highest
           composer-options: --no-ansi --no-interaction --no-progress
       - name: PHPUnit run
         run: vendor/bin/phpunit

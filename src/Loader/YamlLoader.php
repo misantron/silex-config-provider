@@ -9,6 +9,7 @@ use Misantron\Silex\Provider\AbstractLoader;
 use Misantron\Silex\Provider\Exception\ConfigParsingException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
+use Webmozart\Assert\Assert;
 
 /**
  * @package Misantron\Silex\Provider\Loader
@@ -18,7 +19,7 @@ class YamlLoader extends AbstractLoader
     protected function parse(): array
     {
         // @codeCoverageIgnoreStart
-        assert(
+        Assert::true(
             InstalledVersions::isInstalled('symfony/yaml'),
             'Yaml parser library is not installed',
         );
@@ -27,8 +28,8 @@ class YamlLoader extends AbstractLoader
         try {
             $parser = new Parser();
             $config = $parser->parse($this->getFileContents());
-        } catch (ParseException $parseException) {
-            throw ConfigParsingException::withReason($parseException->getMessage());
+        } catch (ParseException $exception) {
+            throw ConfigParsingException::withReason($exception->getMessage());
         }
 
         return $config;

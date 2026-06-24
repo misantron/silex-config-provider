@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Misantron\Silex\Provider;
 
 use Misantron\Silex\Provider\Exception\InvalidConfigException;
+use Webmozart\Assert\Assert;
 
 /**
  * @package Misantron\Silex\Provider
@@ -29,8 +30,8 @@ abstract class AbstractLoader implements LoaderInterface
     protected function getFilePath(): string
     {
         $path = $this->file->getRealPath();
-        assert(
-            \is_string($path),
+        Assert::string(
+            $path,
             'File path is invalid',
         );
 
@@ -42,8 +43,8 @@ abstract class AbstractLoader implements LoaderInterface
         $file = $this->file->openFile();
 
         $contents = $file->fread($file->getSize());
-        assert(
-            \is_string($contents),
+        Assert::string(
+            $contents,
             'File content reading error',
         );
 

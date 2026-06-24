@@ -11,7 +11,9 @@ class InvalidConfigException extends \RuntimeException
 {
     public static function unsupportedFileType(string $ext): self
     {
-        return new self('Unsupported config file type provided: ' . $ext);
+        return new self(
+            'Unsupported config file type provided: ' . htmlspecialchars($ext, ENT_QUOTES, 'UTF-8'),
+        );
     }
 
     public static function notAFile(): self

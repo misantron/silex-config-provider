@@ -11,6 +11,8 @@ class ConfigParsingException extends \RuntimeException
 {
     public static function withReason(string $reason): self
     {
-        return new self('Unable to parse config file: ' . $reason);
+        return new self(
+            'Unable to parse config file: ' . htmlspecialchars($reason, ENT_QUOTES, 'UTF-8'),
+        );
     }
 }
