@@ -1,6 +1,6 @@
 # Config service provider
 
-[![Build Status](https://img.shields.io/github/workflow/status/misantron/silex-config-provider/build.svg?style=flat-square)](https://github.com/misantron/silex-config-provider/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/misantron/silex-config-provider/build.yml?style=flat-square)](https://github.com/misantron/silex-config-provider/actions)
 [![Code Coverage](https://img.shields.io/codacy/coverage/d0da1b65e553458ab7cea3758e9fd346.svg?style=flat-square)](https://app.codacy.com/gh/misantron/silex-config-provider/files)
 [![Code Quality](https://img.shields.io/codacy/grade/d0da1b65e553458ab7cea3758e9fd346.svg?style=flat-square)](https://app.codacy.com/gh/misantron/silex-config-provider)
 [![PHP Version](https://img.shields.io/packagist/php-v/misantron/silex-config-provider.svg?style=flat-square)](https://github.com/misantron/silex-config-provider)
